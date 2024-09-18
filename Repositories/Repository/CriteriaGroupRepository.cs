@@ -11,7 +11,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
 {
     public class CriteriaGroupRepository : BaseRepository<CriteriaGroup>, ICriteriaGroupRepository
     {
-        public CriteriaGroupRepository(IMongoDbContext mongoDbContext) : base(mongoDbContext)
+        public CriteriaGroupRepository(IMongoDbContext mongoDbContext, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository)
         {
 
         }

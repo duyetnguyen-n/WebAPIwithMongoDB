@@ -13,7 +13,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
 {
     public class TeachGroupRepository : BaseRepository<TeachGroup>,ITeachGroupRepository
     {
-        public TeachGroupRepository(IMongoDbContext mongoDbContext) : base(mongoDbContext)
+        public TeachGroupRepository(IMongoDbContext mongoDbContext, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository)
         {
 
         }

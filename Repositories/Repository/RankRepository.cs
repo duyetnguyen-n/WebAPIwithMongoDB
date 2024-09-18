@@ -11,7 +11,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
 {
     public class RankRepository : BaseRepository<Rank>, IRankRepository
     {
-        public RankRepository(IMongoDbContext mongoDbContext) : base(mongoDbContext)
+        public RankRepository(IMongoDbContext mongoDbContext, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository)
         {
 
         }

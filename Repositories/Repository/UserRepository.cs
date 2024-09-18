@@ -13,10 +13,10 @@ namespace WebAPIwithMongoDB.Repositories.Repository
     public class UserRepository : BaseRepository<User>, IUserRepository
     {
         private readonly ITeachGroupRepository _teachGroupRepository;
-        private readonly IEvaluateRepository _evaluateRepository; // Thêm repository cho Evaluate
+        private readonly IEvaluateRepository _evaluateRepository; 
 
-        public UserRepository(IMongoDbContext mongoContext, ITeachGroupRepository teachGroupRepository, IEvaluateRepository evaluateRepository)
-            : base(mongoContext)
+        public UserRepository(IMongoDbContext mongoContext, ITeachGroupRepository teachGroupRepository, IEvaluateRepository evaluateRepository, ILogRepository auditLogRepository)
+            : base(mongoContext, auditLogRepository)
         {
             _teachGroupRepository = teachGroupRepository;
             _evaluateRepository = evaluateRepository;

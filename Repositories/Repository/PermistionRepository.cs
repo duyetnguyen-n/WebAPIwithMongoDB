@@ -11,7 +11,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
 {
     public class PermistionRepository : BaseRepository<Permission>, IPermissionRepository
     {
-        public PermistionRepository(IMongoDbContext mongoDbContext) : base(mongoDbContext)
+        public PermistionRepository(IMongoDbContext mongoDbContext, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository)
         {
             
         }

@@ -32,7 +32,7 @@ namespace WebAPIwithMongoDB.Controllers
         [ProducesResponseType(404)]
         public async Task<IActionResult> GetLog(string id)
         {
-            if (!await _Log.Exists(id))
+            if (await _Log.GetAsync(id) != null)
                 return NotFound();
             var Log = await _Log.GetAsync(id);
 
@@ -67,7 +67,7 @@ namespace WebAPIwithMongoDB.Controllers
         [ProducesResponseType(200)]
         public async Task<ActionResult> DeleteLog(string id)
         {
-            if (!await _Log.Exists(id))
+            if (await _Log.GetAsync(id) == null)
                 return NotFound();
 
             await _Log.DeleteAsync(id);

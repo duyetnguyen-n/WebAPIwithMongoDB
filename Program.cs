@@ -1,4 +1,5 @@
 using WebAPIwithMongoDB.Context;
+using WebAPIwithMongoDB.Entities;
 using WebAPIwithMongoDB.Options;
 using WebAPIwithMongoDB.Repositories;
 using WebAPIwithMongoDB.Repositories.Interface;
@@ -25,6 +26,8 @@ builder.Services.AddScoped<ICriteriaRepository, CriteriaRepository>();
 builder.Services.AddScoped<ICriteriaOfGroupRepository, CriteriaOfGroupRepository>();
 builder.Services.AddScoped<IEvaluateRepository, EvaluateRepository>();
 builder.Services.AddScoped<IRankRepository, RankRepository>();
+builder.Services.AddScoped<ILogRepository, LogRepository>();
+builder.Services.AddScoped<IPermissionRequestsRepository, PermissionRequestsRepository>();
 
 
 var app = builder.Build();

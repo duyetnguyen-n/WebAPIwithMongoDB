@@ -12,7 +12,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
     
     public class PermissionOfAPositionRepository : BaseRepository<PermissionOfAPosition>, IPermissionOfAPositionRepository
     {
-        public PermissionOfAPositionRepository(IMongoDbContext mongoDbContext) : base(mongoDbContext)
+        public PermissionOfAPositionRepository(IMongoDbContext mongoDbContext, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository)
         {
 
         }

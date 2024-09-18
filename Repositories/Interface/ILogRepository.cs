@@ -7,8 +7,12 @@ using WebAPIwithMongoDB.Repositories.Base;
 
 namespace WebAPIwithMongoDB.Repositories.Interface
 {
-    public interface ILogRepository : IBaseRepository<Log>
+    public interface ILogRepository 
     {
-        
+        Task<IEnumerable<Log>> GetAsync();
+        Task<Log> GetAsync(string id);
+        Task CreateAsync(Log obj);
+        Task DeleteAsync(string id);
+        Task DeleteAllAsync();
     }
 }
