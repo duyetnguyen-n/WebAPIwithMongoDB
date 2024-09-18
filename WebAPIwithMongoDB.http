@@ -1,0 +1,6 @@
+@WebAPIwithMongoDB_HostAddress = http://localhost:5238
+
+GET {{WebAPIwithMongoDB_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
