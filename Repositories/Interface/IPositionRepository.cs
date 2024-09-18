@@ -9,6 +9,6 @@ namespace WebAPIwithMongoDB.Repositories.Interface
 {
     public interface IPositionRepository : IBaseRepository<Position>
     {
-
+        
     }
 }

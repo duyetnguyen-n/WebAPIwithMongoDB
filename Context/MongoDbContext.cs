@@ -13,7 +13,6 @@ namespace WebAPIwithMongoDB.Context
     {
         private IMongoDatabase _db;
         private MongoClient _client;
-
         public MongoDbContext(IOptions<MongoSettings> settings)
         {
             _client = new MongoClient(settings.Value.ConnectionString);

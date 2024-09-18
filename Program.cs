@@ -23,7 +23,6 @@ builder.Services.AddScoped<IPermissionOfAPositionRepository, PermissionOfAPositi
 builder.Services.AddScoped<ITeachGroupRepository, TeachGroupRepository>();
 builder.Services.AddScoped<ICriteriaGroupRepository, CriteriaGroupRepository>();
 builder.Services.AddScoped<ICriteriaRepository, CriteriaRepository>();
-builder.Services.AddScoped<ICriteriaOfGroupRepository, CriteriaOfGroupRepository>();
 builder.Services.AddScoped<IEvaluateRepository, EvaluateRepository>();
 builder.Services.AddScoped<IRankRepository, RankRepository>();
 builder.Services.AddScoped<ILogRepository, LogRepository>();

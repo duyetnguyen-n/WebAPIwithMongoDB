@@ -9,6 +9,7 @@ namespace WebAPIwithMongoDB.Repositories.Interface
 {
     public interface IUserRepository : IBaseRepository<User>
     {
-        
+        // Task<IEnumerable<User>> GetUsersByPositionId(string positionId);
+        // Task<IEnumerable<User>> GetUsersByTeachGroupId(string teachGroupId);
     }
 }

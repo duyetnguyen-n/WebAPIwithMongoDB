@@ -15,13 +15,13 @@ namespace WebAPIwithMongoDB.Entities
         [BsonElement("points"), BsonRepresentation(BsonType.Double)]
         public double Points { get; set; }
 
-        [BsonElement("role"), BsonRepresentation(BsonType.String)]
-        public string? Role { get; set; }  // Addition or Subtraction
-
         [BsonElement("notes"), BsonRepresentation(BsonType.String)]
         public string? Notes { get; set; }
 
         [BsonElement("personCheck"), BsonRepresentation(BsonType.ObjectId)]
-        public string? PersonCheck { get; set; }  // PositionId
+        public string? PersonCheck { get; set; }  
+
+        [BsonElement("criteriaGroupId"), BsonRepresentation(BsonType.ObjectId)]
+        public string? CriteriaGroupId { get; set; }  
     }
 }

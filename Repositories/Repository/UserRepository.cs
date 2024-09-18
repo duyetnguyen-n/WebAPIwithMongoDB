@@ -7,6 +7,7 @@ using WebAPIwithMongoDB.Repositories.Interface;
 using WebAPIwithMongoDB.Context;
 using WebAPIwithMongoDB.Entities;
 using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace WebAPIwithMongoDB.Repositories.Repository
 {
@@ -21,6 +22,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
             _teachGroupRepository = teachGroupRepository;
             _evaluateRepository = evaluateRepository;
         }
+
 
         public override async Task CreateAsync(User user)
         {
@@ -39,11 +41,11 @@ namespace WebAPIwithMongoDB.Repositories.Repository
             if (user == null)
                 throw new Exception("User not found");
 
-            var evaluations = await _evaluateRepository.GetEvaluationsByUserId(id);
-            if (evaluations.Any())
-            {
-                throw new Exception("User has evaluations. Please handle evaluations before deleting.");
-            }
+            // var evaluations = await _evaluateRepository.GetEvaluationsByUserId(id);
+            // if (evaluations.Any())
+            // {
+            //     throw new Exception("User has evaluations. Please handle evaluations before deleting.");
+            // }
 
             await base.DeleteAsync(id);
 

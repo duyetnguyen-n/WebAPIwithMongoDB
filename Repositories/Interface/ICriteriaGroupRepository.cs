@@ -9,6 +9,7 @@ namespace WebAPIwithMongoDB.Repositories.Interface
 {
     public interface ICriteriaGroupRepository : IBaseRepository<CriteriaGroup>
     {
-        
+        Task IncrementCriteriaGroupCount(string criteriaGroupId);
+        Task DecrementCriteriaGroupCount(string criteriaGroupId);
     }
 }

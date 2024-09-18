@@ -53,7 +53,7 @@ namespace WebAPIwithMongoDB.Controllers
             {
                 Name = Criteria.Name,
                 Points = Criteria.Points,
-                Role = Criteria.Role,
+                CriteriaGroupId = Criteria.CriteriaGroupId,
                 Notes = Criteria.Notes,
                 PersonCheck = Criteria.PersonCheck
             });
@@ -73,7 +73,7 @@ namespace WebAPIwithMongoDB.Controllers
 
             Criteriaold.Name = Criteria.Name;
             Criteriaold.Points = Criteria.Points;
-            Criteriaold.Role = Criteria.Role;
+            Criteriaold.CriteriaGroupId = Criteria.CriteriaGroupId;
             Criteriaold.Notes = Criteria.Notes;
             Criteriaold.PersonCheck = Criteria.PersonCheck;
 

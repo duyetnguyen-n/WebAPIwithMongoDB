@@ -52,7 +52,8 @@ namespace WebAPIwithMongoDB.Controllers
             await _CriteriaGroup.CreateAsync(new CriteriaGroup
             {
                 Name = CriteriaGroup.Name,
-                Count = 0
+                Count = 0,
+                Role = CriteriaGroup.Role
             });
 
             return NoContent();
@@ -69,6 +70,7 @@ namespace WebAPIwithMongoDB.Controllers
             var CriteriaGroupold = await _CriteriaGroup.GetAsync(CriteriaGroup.Id);
 
             CriteriaGroupold.Name = CriteriaGroup.Name;
+            CriteriaGroupold.Role = CriteriaGroup.Role;
 
             await _CriteriaGroup.UpdateAsync(CriteriaGroup.Id, CriteriaGroup);
 
