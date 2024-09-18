@@ -44,3 +44,4 @@
 /Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/obj/Debug/net8.0/WebAPIwithMongoDB.pdb
 /Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/obj/Debug/net8.0/WebAPIwithMongoDB.genruntimeconfig.cache
 /Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/obj/Debug/net8.0/ref/WebAPIwithMongoDB.dll
+/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/obj/Debug/net8.0/WebAPIwithMongoDB.sourcelink.json
