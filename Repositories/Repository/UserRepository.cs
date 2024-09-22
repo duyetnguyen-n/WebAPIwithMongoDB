@@ -15,6 +15,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
     {
         private readonly ITeachGroupRepository _teachGroupRepository;
         private readonly IEvaluateRepository _evaluateRepository; 
+        private readonly IUserRepository _users; 
 
         public UserRepository(IMongoDbContext mongoContext, ITeachGroupRepository teachGroupRepository, IEvaluateRepository evaluateRepository, ILogRepository auditLogRepository)
             : base(mongoContext, auditLogRepository)
@@ -54,5 +55,11 @@ namespace WebAPIwithMongoDB.Repositories.Repository
                 await _teachGroupRepository.DecrementTeachGroupCount(user.TeachGroupId);
             }
         }
+        public async Task<User> FindByNumberPhoneAsync(string numberPhone)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.NumberPhone, numberPhone);
+            return await _dbCollection.Find(filter).FirstOrDefaultAsync();
+        }
+
     }
 }

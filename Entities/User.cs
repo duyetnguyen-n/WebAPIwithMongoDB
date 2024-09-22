@@ -19,8 +19,8 @@ namespace WebAPIwithMongoDB.Entities
         [BsonElement("password"), BsonRepresentation(BsonType.String)]
         public string? Password { get; set; }
 
-        [BsonElement("positionId"), BsonRepresentation(BsonType.ObjectId)]
-        public string? PositionId { get; set; }
+        [BsonElement("position"), BsonRepresentation(BsonType.String)]
+        public string? Position { get; set; }
 
         [BsonElement("name"), BsonRepresentation(BsonType.String)]
         public string? Name { get; set; }

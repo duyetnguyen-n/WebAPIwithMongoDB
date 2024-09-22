@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebAPIwithMongoDB.Entities;
@@ -41,7 +42,6 @@ namespace WebAPIwithMongoDB.Controllers
 
             return Ok(Evaluate);
         }
-
         [HttpPost]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
@@ -60,7 +60,6 @@ namespace WebAPIwithMongoDB.Controllers
 
             return NoContent();
         }
-
         [HttpDelete]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

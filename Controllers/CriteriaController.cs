@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebAPIwithMongoDB.Entities;
@@ -46,6 +47,7 @@ namespace WebAPIwithMongoDB.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> PostCriteria(Criteria Criteria)
         {
 
@@ -65,6 +67,7 @@ namespace WebAPIwithMongoDB.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> PutCriteria(Criteria Criteria)
         {
             if (!await _Criteria.Exists(Criteria.Id))
@@ -88,6 +91,7 @@ namespace WebAPIwithMongoDB.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> DeleteCriteria(string id)
         {
             if (!await _Criteria.Exists(id))

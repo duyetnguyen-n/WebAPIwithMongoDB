@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
@@ -41,7 +42,7 @@ namespace WebAPIwithMongoDB.Controllers
             
             return Ok(user);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
@@ -52,7 +53,7 @@ namespace WebAPIwithMongoDB.Controllers
             {
                 NumberPhone = user.NumberPhone,
                 Password = user.Password,
-                PositionId = user.PositionId,
+                Position = user.Position,
                 Name = user.Name,
                 Age = user.Age,
                 Mail = user.Mail,
@@ -65,7 +66,7 @@ namespace WebAPIwithMongoDB.Controllers
 
             return NoContent();
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -77,7 +78,7 @@ namespace WebAPIwithMongoDB.Controllers
 
             userold.NumberPhone = user.NumberPhone;
             userold.Password = user.Password;
-            userold.PositionId = user.PositionId;
+            userold.Position = user.Position;
             userold.Name = user.Name;
             userold.Age = user.Age;
             userold.Mail = user.Mail;
@@ -93,6 +94,7 @@ namespace WebAPIwithMongoDB.Controllers
 
             return NoContent();
         }
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebAPIwithMongoDB.Entities;
@@ -20,12 +21,13 @@ namespace WebAPIwithMongoDB.Controllers
         {
             _PermissionRequests = PermissionRequests;
         }
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IEnumerable<PermissionRequests>> GetPermissionRequestss()
         {
             return await _PermissionRequests.GetAsync();
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(PermissionRequests))]
         [ProducesResponseType(400)]
@@ -41,7 +43,7 @@ namespace WebAPIwithMongoDB.Controllers
 
             return Ok(PermissionRequests);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
@@ -62,7 +64,7 @@ namespace WebAPIwithMongoDB.Controllers
 
             return NoContent();
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

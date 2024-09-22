@@ -11,5 +11,6 @@ namespace WebAPIwithMongoDB.Repositories.Interface
     {
         // Task<IEnumerable<User>> GetUsersByPositionId(string positionId);
         // Task<IEnumerable<User>> GetUsersByTeachGroupId(string teachGroupId);
+        Task<User> FindByNumberPhoneAsync(string numberPhone);
     }
 }

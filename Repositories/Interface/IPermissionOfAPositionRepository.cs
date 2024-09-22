@@ -9,6 +9,6 @@ namespace WebAPIwithMongoDB.Repositories.Interface
 {
     public interface IPermissionOfAPositionRepository : IBaseRepository<PermissionOfAPosition>
     {
-        
+        // Task<List<PermissionOfAPosition>> FindAllByPositionIdAsync(string PositionId);
     }
 }

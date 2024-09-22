@@ -1,98 +1,77 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using WebAPIwithMongoDB.Entities;
 using WebAPIwithMongoDB.Repositories.Interface;
+using WebAPIwithMongoDB.Services;
 
 namespace WebAPIwithMongoDB.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CriteriaGroupController : Controller
+    public class CriteriaGroupController : ControllerBase
     {
-        private readonly ICriteriaGroupRepository _CriteriaGroup;
+        private readonly ICriteriaGroupRepository _criteriaGroupRepository;
 
-        public CriteriaGroupController(ICriteriaGroupRepository CriteriaGroup)
+        public CriteriaGroupController(ICriteriaGroupRepository criteriaGroupRepository)
         {
-            _CriteriaGroup = CriteriaGroup;
+            _criteriaGroupRepository = criteriaGroupRepository;
         }
+
         [HttpGet]
-        public async Task<IEnumerable<CriteriaGroup>> GetCriteriaGroups()
+        public async Task<ActionResult<ApiResponse<IEnumerable<CriteriaGroup>>>> GetCriteriaGroups()
         {
-            return await _CriteriaGroup.GetAsync();
+            var criteriaGroups = await _criteriaGroupRepository.GetAsync();
+            return Ok(new ApiResponse<IEnumerable<CriteriaGroup>>(200, "Thành công", criteriaGroups));
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(200, Type = typeof(CriteriaGroup))]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCriteriaGroup(string id)
+        public async Task<ActionResult<ApiResponse<CriteriaGroup>>> GetCriteriaGroup(string id)
         {
-            if (!await _CriteriaGroup.Exists(id))
-                return NotFound();
-            var CriteriaGroup = await _CriteriaGroup.GetAsync(id);
+            if (!await _criteriaGroupRepository.Exists(id))
+                return NotFound(new ApiResponse<CriteriaGroup>(404, "Không tìm thấy nhóm tiêu chí", null));
 
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            return Ok(CriteriaGroup);
+            var criteriaGroup = await _criteriaGroupRepository.GetAsync(id);
+            return Ok(new ApiResponse<CriteriaGroup>(200, "Thành công", criteriaGroup));
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        public async Task<ActionResult> PostCriteriaGroup(CriteriaGroup CriteriaGroup)
+        public async Task<ActionResult<ApiResponse<CriteriaGroup>>> PostCriteriaGroup(CriteriaGroup criteriaGroup)
         {
-
-            await _CriteriaGroup.CreateAsync(new CriteriaGroup
+            if (criteriaGroup == null || !ModelState.IsValid)
             {
-                Name = CriteriaGroup.Name,
+                return BadRequest(new ApiResponse<CriteriaGroup>(400, "Thất bại", null));
+            }
+
+            await _criteriaGroupRepository.CreateAsync(new CriteriaGroup
+            {
+                Name = criteriaGroup.Name,
                 Count = 0,
-                Role = CriteriaGroup.Role
+                Role = criteriaGroup.Role
             });
 
-            return NoContent();
+            return Ok(new ApiResponse<CriteriaGroup>(200, "Thành công", criteriaGroup));
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPut]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult> PutCriteriaGroup(CriteriaGroup CriteriaGroup)
+        public async Task<ActionResult<ApiResponse<CriteriaGroup>>> PutCriteriaGroup(CriteriaGroup criteriaGroup)
         {
-            if (!await _CriteriaGroup.Exists(CriteriaGroup.Id))
-                return NotFound();
-            var CriteriaGroupold = await _CriteriaGroup.GetAsync(CriteriaGroup.Id);
+            if (!await _criteriaGroupRepository.Exists(criteriaGroup.Id))
+                return NotFound(new ApiResponse<CriteriaGroup>(404, "Không tìm thấy nhóm tiêu chí", null));
 
-            CriteriaGroupold.Name = CriteriaGroup.Name;
-            CriteriaGroupold.Role = CriteriaGroup.Role;
-
-            await _CriteriaGroup.UpdateAsync(CriteriaGroup.Id, CriteriaGroup);
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            return NoContent();
+            await _criteriaGroupRepository.UpdateAsync(criteriaGroup.Id, criteriaGroup);
+            return Ok(new ApiResponse<CriteriaGroup>(200, "Thành công", criteriaGroup));
         }
-        [HttpDelete]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult> DeleteCriteriaGroup(string id)
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ApiResponse<string>>> DeleteCriteriaGroup(string id)
         {
-            if (!await _CriteriaGroup.Exists(id))
-                return NotFound();
+            if (!await _criteriaGroupRepository.Exists(id))
+                return NotFound(new ApiResponse<string>(404, "Không tìm thấy nhóm tiêu chí", null));
 
-            await _CriteriaGroup.DeleteAsync(id);
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            return Ok();
+            await _criteriaGroupRepository.DeleteAsync(id);
+            return Ok(new ApiResponse<string>(200, "Xóa thành công", null));
         }
     }
 }

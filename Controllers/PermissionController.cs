@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebAPIwithMongoDB.Entities;
@@ -41,7 +42,7 @@ namespace WebAPIwithMongoDB.Controllers
 
             return Ok(Permission);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
@@ -57,7 +58,7 @@ namespace WebAPIwithMongoDB.Controllers
 
             return NoContent();
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
@@ -77,6 +78,7 @@ namespace WebAPIwithMongoDB.Controllers
 
             return NoContent();
         }
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
