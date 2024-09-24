@@ -11,9 +11,25 @@ namespace WebAPIwithMongoDB.Repositories.Repository
 {
     public class RankRepository : BaseRepository<Rank>, IRankRepository
     {
-        public RankRepository(IMongoDbContext mongoDbContext, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository)
+        private readonly IEvaluateRepository _evaluateRepository;
+        public RankRepository(IMongoDbContext mongoDbContext, IEvaluateRepository evaluateRepository, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository)
         {
-
+            _evaluateRepository = evaluateRepository; 
         }
+        public override async Task DeleteAsync(string id)
+        {
+            var rank = await GetAsync(id);
+            if (rank == null)
+                throw new Exception("Rank not found");
+
+            var evaluations = await _evaluateRepository.GetEvaluationsByRankId(id);
+            if (evaluations.Any())
+            {
+                throw new Exception("Không thể xóa được hạng này vì còn đánh giá liên quan!");
+            }
+
+            await base.DeleteAsync(id);
+        }
+
     }
 }

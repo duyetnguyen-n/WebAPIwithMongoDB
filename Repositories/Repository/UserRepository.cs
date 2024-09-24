@@ -24,6 +24,12 @@ namespace WebAPIwithMongoDB.Repositories.Repository
             _evaluateRepository = evaluateRepository;
         }
 
+        public async Task<IEnumerable<User>> GetUsersByTeachGroupId(string teachGroupId)
+        {
+            var filter = Builders<User>.Filter.Eq(e => e.TeachGroupId, teachGroupId);
+            return await _dbCollection.Find(filter).ToListAsync();
+        }
+
 
         public override async Task CreateAsync(User user)
         {
@@ -42,11 +48,13 @@ namespace WebAPIwithMongoDB.Repositories.Repository
             if (user == null)
                 throw new Exception("User not found");
 
-            // var evaluations = await _evaluateRepository.GetEvaluationsByUserId(id);
-            // if (evaluations.Any())
-            // {
-            //     throw new Exception("User has evaluations. Please handle evaluations before deleting.");
-            // }
+            var evaluations = await _evaluateRepository.GetEvaluationsByUserId(id);
+            if (evaluations.Any())
+            {
+                foreach (Evaluate item in evaluations){
+                   await _evaluateRepository.DeleteAsync(item.Id);
+                }
+            }
 
             await base.DeleteAsync(id);
 

@@ -7,8 +7,9 @@ using WebAPIwithMongoDB.Repositories.Base;
 
 namespace WebAPIwithMongoDB.Repositories.Interface
 {
-    public interface IPermissionOfAPositionRepository : IBaseRepository<PermissionOfAPosition>
+    public interface ICriteriaOfAEvaluationRepository : IBaseRepository<CriteriaOfAEvaluation>
     {
-        // Task<List<PermissionOfAPosition>> FindAllByPositionIdAsync(string PositionId);
+        Task<IEnumerable<CriteriaOfAEvaluation>> GetEvaluationesByCriteriaId(string criteriaId);
+
     }
 }

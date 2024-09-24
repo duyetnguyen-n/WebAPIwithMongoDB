@@ -9,7 +9,7 @@ namespace WebAPIwithMongoDB.Repositories.Interface
 {
     public interface IEvaluateRepository : IBaseRepository<Evaluate>
     {
-        // Task<IEnumerable<Evaluate>> GetEvaluationsByUserId(string userId);
-        // Task<IEnumerable<Evaluate>> GetEvaluationsByCriteriaId(string criteriaId);
+        Task<IEnumerable<Evaluate>> GetEvaluationsByUserId(string userId);
+        Task<IEnumerable<Evaluate>> GetEvaluationsByRankId(string rankId);
     }
 }

@@ -15,7 +15,6 @@ namespace WebAPIwithMongoDB.Repositories.Repository
     {
         public TeachGroupRepository(IMongoDbContext mongoDbContext, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository)
         {
-
         }
         public async Task IncrementTeachGroupCount(string teachGroupId)
         {
@@ -30,5 +29,15 @@ namespace WebAPIwithMongoDB.Repositories.Repository
             var update = Builders<TeachGroup>.Update.Inc(tg => tg.Count, -1);
             await _dbCollection.UpdateOneAsync(filter, update);
         }
+
+        public override async Task DeleteAsync(string id){
+            var teachGroup = await GetAsync(id);
+            if (teachGroup == null)
+                throw new Exception("Group not found");
+
+            await base.DeleteAsync(id);
+        }
+
+
     }
 }

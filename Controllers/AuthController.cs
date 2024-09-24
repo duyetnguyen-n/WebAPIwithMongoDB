@@ -12,14 +12,12 @@ public class AuthController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
     private readonly IPositionRepository _positionRepository;
-    private readonly IPermissionOfAPositionRepository _permissionOfAPositionRepository;
     private readonly IConfiguration _configuration;
 
-    public AuthController(IUserRepository userRepository, IPositionRepository positionRepository, IPermissionOfAPositionRepository permissionOfAPositionRepository, IConfiguration configuration)
+    public AuthController(IUserRepository userRepository, IPositionRepository positionRepository, IConfiguration configuration)
     {
         _userRepository = userRepository;
         _positionRepository = positionRepository;
-        _permissionOfAPositionRepository = permissionOfAPositionRepository;
         _configuration = configuration;
     }
 

@@ -17,10 +17,12 @@ namespace WebAPIwithMongoDB.Controllers
     public class TeachGroupController : Controller
     {
         private readonly ITeachGroupRepository _TeachGroup;
+        private readonly IUserRepository _user;
 
-        public TeachGroupController(ITeachGroupRepository TeachGroup)
+        public TeachGroupController(ITeachGroupRepository TeachGroup, IUserRepository user)
         {
             _TeachGroup = TeachGroup;
+            _user = user;
         }
         [HttpGet]
         public async Task<ActionResult<ApiResponse<IEnumerable<TeachGroup>>>> GetTeachGroups()
@@ -93,11 +95,19 @@ namespace WebAPIwithMongoDB.Controllers
             if (!await _TeachGroup.Exists(id))
                 return NotFound(new ApiResponse<string>(404, "Không tìm thấy tổ", null));
 
+            var users = await _user.GetUsersByTeachGroupId(id);
+            if (users.Any())
+            {
+                return BadRequest(new ApiResponse<string>(400, "Xóa không thành công vì còn người bên trong", null));
+            }
+
             await _TeachGroup.DeleteAsync(id);
 
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return BadRequest(new ApiResponse<string>(400, "Xóa không thành công vì có lỗi gì rồi", null));
+
             return Ok(new ApiResponse<string>(200, "Xóa thành công", null));
         }
+
     }
 }

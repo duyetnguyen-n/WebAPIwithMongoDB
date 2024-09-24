@@ -19,14 +19,16 @@ namespace WebAPIwithMongoDB.Controllers
     public class UserController : Controller
     {
         private readonly IUserRepository _users;
+        private readonly ITeachGroupRepository _teachGroup;
         private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _configuration;
 
-        public UserController(IUserRepository users, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+        public UserController(IUserRepository users, ITeachGroupRepository teachGroup, IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _users = users;
             _env = webHostEnvironment;
             _configuration = configuration;
+            _teachGroup = teachGroup;
         }
 
         [HttpGet]
@@ -110,12 +112,18 @@ namespace WebAPIwithMongoDB.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<ApiResponse<User>>> PutUser(User user)
+        public async Task<ActionResult<ApiResponse<User>>> PutUser([FromForm] User user, IFormFile avatar)
         {
             if (!await _users.Exists(user.Id))
-                return NotFound(new ApiResponse<User>(404, "Không tìm thấy nhóm tiêu chí", null));
+                return NotFound(new ApiResponse<User>(404, "Không tìm thấy người dùng", null));
 
             var userOld = await _users.GetAsync(user.Id);
+
+            if (userOld.TeachGroupId != user.TeachGroupId)
+            {
+                await  _teachGroup.DecrementTeachGroupCount(userOld.TeachGroupId);
+                await _teachGroup.IncrementTeachGroupCount(user.TeachGroupId);
+            }
 
             userOld.NumberPhone = user.NumberPhone;
             userOld.Password = user.Password;
@@ -124,17 +132,48 @@ namespace WebAPIwithMongoDB.Controllers
             userOld.Age = user.Age;
             userOld.Mail = user.Mail;
             userOld.Gender = user.Gender;
-            userOld.TeachGroupId = user.TeachGroupId;
+            userOld.TeachGroupId = user.TeachGroupId; 
             userOld.Point = user.Point;
-            userOld.Avatar = user.Avatar;
+
+            // Kiểm tra nếu có ảnh đại diện mới
+            if (avatar != null)
+            {
+                // Xóa ảnh cũ nếu tồn tại
+                if (!string.IsNullOrEmpty(userOld.Avatar))
+                {
+                    var oldAvatarPath = Path.Combine(_env.WebRootPath, "uploads", userOld.Avatar);
+                    if (System.IO.File.Exists(oldAvatarPath))
+                    {
+                        try
+                        {
+                            System.IO.File.Delete(oldAvatarPath);
+                            Console.WriteLine($"Deleted old avatar: {oldAvatarPath}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Failed to delete old avatar: {ex.Message}");
+                        }
+                    }
+                }
+
+                // Upload file avatar mới
+                var uploadResponse = await UploadFile(avatar);
+                if (uploadResponse.Result is BadRequestObjectResult)
+                {
+                    return BadRequest(new ApiResponse<User>(400, "File không hợp lệ", null));
+                }
+                var uploadResult = (ApiResponse<string>)((ObjectResult)uploadResponse.Result).Value;
+                userOld.Avatar = uploadResult.Data; // Cập nhật ảnh đại diện mới
+            }
 
             await _users.UpdateAsync(user.Id, userOld);
 
             if (!ModelState.IsValid)
-                return BadRequest(new ApiResponse<User>(400, "Lỗi chưa thêm được dữ liệu đâu",null));
+                return BadRequest(new ApiResponse<User>(400, "Lỗi chưa thêm được dữ liệu đâu", null));
 
-            return Ok(new ApiResponse<User>(200, "Thành công", user));
+            return Ok(new ApiResponse<User>(200, "Cập nhật thành công", userOld));
         }
+
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
@@ -146,6 +185,41 @@ namespace WebAPIwithMongoDB.Controllers
             if (!await _users.Exists(id))
                 return NotFound(new ApiResponse<string>(404, "Không tìm thấy nhóm tiêu chí", null));
 
+            var user = await _users.GetAsync(id);
+
+            if (user != null && !string.IsNullOrEmpty(user.Avatar))
+            {
+                var avatarPath = Path.Combine(_env.WebRootPath, "uploads", user.Avatar);
+                Console.WriteLine($"Attempting to delete file at: {avatarPath}");
+
+                if (System.IO.File.Exists(avatarPath))
+                {
+                    try
+                    {
+                        System.IO.File.Delete(avatarPath);
+                        Console.WriteLine("File deleted successfully.");
+                    }
+                    catch (UnauthorizedAccessException ex)
+                    {
+                        Console.WriteLine($"Unauthorized access: {ex.Message}");
+                        return StatusCode(403, new ApiResponse<string>(403, "Không có quyền xóa ảnh đại diện", null));
+                    }
+                    catch (IOException ex)
+                    {
+                        Console.WriteLine($"File in use or IO error: {ex.Message}");
+                        return StatusCode(500, new ApiResponse<string>(500, "Ảnh đang được sử dụng bởi một ứng dụng khác hoặc gặp lỗi IO", null));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"General error deleting file: {ex.Message}");
+                        return StatusCode(500, new ApiResponse<string>(500, "Lỗi khi xóa ảnh đại diện", null));
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("File does not exist.");
+                }
+            }
             await _users.DeleteAsync(id);
 
             if (!ModelState.IsValid)
@@ -153,6 +227,7 @@ namespace WebAPIwithMongoDB.Controllers
 
             return Ok(new ApiResponse<string>(200, "Xóa thành công", null));
         }
+
 
         [Route("UploadFile")]
         [HttpPost]

@@ -16,11 +16,17 @@ namespace WebAPIwithMongoDB.Repositories.Repository
         {
             
         }
-        // public async Task<IEnumerable<Evaluate>> GetEvaluationsByUserId(string userId)
-        // {
-        //     var filter = Builders<Evaluate>.Filter.Eq(e => e.UserId, userId);
-        //     return await _dbCollection.Find(filter).ToListAsync();
-        // }
+        public async Task<IEnumerable<Evaluate>> GetEvaluationsByUserId(string userId)
+        {
+            var filter = Builders<Evaluate>.Filter.Eq(e => e.UserId, userId);
+            return await _dbCollection.Find(filter).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Evaluate>> GetEvaluationsByRankId(string rankId)
+        {
+            var filter = Builders<Evaluate>.Filter.Eq(e => e.RankId, rankId);
+            return await _dbCollection.Find(filter).ToListAsync();
+        }
 
         // public async Task<IEnumerable<Evaluate>> GetEvaluationsByCriteriaId(string criteriaId)
         // {

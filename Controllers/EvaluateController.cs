@@ -57,8 +57,7 @@ namespace WebAPIwithMongoDB.Controllers
             await _Evaluate.CreateAsync(new Evaluate
             {
                 UserId = Evaluate.UserId,
-                CriteriaId = Evaluate.CriteriaId,
-                Quantity = Evaluate.Quantity,
+                RankId = Evaluate.RankId,
                 TotalPointSubstraction = Evaluate.TotalPointSubstraction,
                 TotalPointAddition = Evaluate.TotalPointAddition
             });

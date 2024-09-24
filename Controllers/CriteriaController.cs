@@ -17,10 +17,12 @@ namespace WebAPIwithMongoDB.Controllers
     public class CriteriaController : Controller
     {
         private readonly ICriteriaRepository _Criteria;
+        private readonly ICriteriaGroupRepository _CriteriaGroup;
 
-        public CriteriaController(ICriteriaRepository Criteria)
+        public CriteriaController(ICriteriaRepository Criteria, ICriteriaGroupRepository CriteriaGroup)
         {
             _Criteria = Criteria;
+            _CriteriaGroup = CriteriaGroup;
         }
         [HttpGet]
         public async Task<ActionResult<ApiResponse<IEnumerable<Criteria>>>> GetCriterias()
@@ -78,6 +80,12 @@ namespace WebAPIwithMongoDB.Controllers
             if (!await _Criteria.Exists(Criteria.Id))
                 return NotFound(new ApiResponse<Criteria>(404, "Không tìm thấy tiêu chí", null));
             var Criteriaold = await _Criteria.GetAsync(Criteria.Id);
+
+            if (Criteriaold.CriteriaGroupId != Criteria.CriteriaGroupId)
+            {
+                await _CriteriaGroup.DecrementCriteriaGroupCount(Criteriaold.CriteriaGroupId);
+                await _CriteriaGroup.IncrementCriteriaGroupCount(Criteriaold.CriteriaGroupId);
+            }
 
             Criteriaold.Name = Criteria.Name;
             Criteriaold.Points = Criteria.Points;

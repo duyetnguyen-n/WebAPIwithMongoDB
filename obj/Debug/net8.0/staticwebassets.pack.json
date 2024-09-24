@@ -1,12 +1,36 @@
 {
   "Files": [
     {
+      "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/03ff4765-1986-4021-b59f-567c86062e9a.jpg",
+      "PackagePath": "staticwebassets/uploads/03ff4765-1986-4021-b59f-567c86062e9a.jpg"
+    },
+    {
       "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/2061ef8a-b743-4c72-bd1d-9681ee9c0b4c_duyet.jpg",
       "PackagePath": "staticwebassets/uploads/2061ef8a-b743-4c72-bd1d-9681ee9c0b4c_duyet.jpg"
     },
     {
+      "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/5f9265cf-0d1b-4f51-b317-8d6b9e763f7a.jpg",
+      "PackagePath": "staticwebassets/uploads/5f9265cf-0d1b-4f51-b317-8d6b9e763f7a.jpg"
+    },
+    {
+      "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/6152b605-1eb0-4255-a42b-de0d39904158.jpg",
+      "PackagePath": "staticwebassets/uploads/6152b605-1eb0-4255-a42b-de0d39904158.jpg"
+    },
+    {
+      "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/85729bf1-d373-4cb0-8776-fae675f1aa7d.jpg",
+      "PackagePath": "staticwebassets/uploads/85729bf1-d373-4cb0-8776-fae675f1aa7d.jpg"
+    },
+    {
+      "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/a99e4ec2-7eeb-445a-8553-b72698938df5.jpg",
+      "PackagePath": "staticwebassets/uploads/a99e4ec2-7eeb-445a-8553-b72698938df5.jpg"
+    },
+    {
       "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/duyet.jpg",
       "PackagePath": "staticwebassets/uploads/duyet.jpg"
+    },
+    {
+      "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/f99e3145-8638-493b-af26-5879c6628e81.jpg",
+      "PackagePath": "staticwebassets/uploads/f99e3145-8638-493b-af26-5879c6628e81.jpg"
     },
     {
       "Id": "obj/Debug/net8.0/staticwebassets/msbuild.WebAPIwithMongoDB.Microsoft.AspNetCore.StaticWebAssets.props",

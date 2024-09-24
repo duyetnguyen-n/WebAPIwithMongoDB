@@ -104,8 +104,7 @@ builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection(nameo
 builder.Services.AddScoped<IMongoDbContext, MongoDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPositionRepository, PositionRepository>();
-builder.Services.AddScoped<IPermissionRepository, PermistionRepository>();
-builder.Services.AddScoped<IPermissionOfAPositionRepository, PermissionOfAPositionRepository>();
+builder.Services.AddScoped<ICriteriaOfAEvaluationRepository, CriteriaOfAEvaluationRepository>();
 builder.Services.AddScoped<ITeachGroupRepository, TeachGroupRepository>();
 builder.Services.AddScoped<ICriteriaGroupRepository, CriteriaGroupRepository>();
 builder.Services.AddScoped<ICriteriaRepository, CriteriaRepository>();

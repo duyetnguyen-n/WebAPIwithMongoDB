@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Driver;
 using WebAPIwithMongoDB.Context;
 using WebAPIwithMongoDB.Entities;
 using WebAPIwithMongoDB.Repositories.Base;
@@ -12,13 +13,13 @@ namespace WebAPIwithMongoDB.Repositories.Repository
     public class CriteriaRepository : BaseRepository<Criteria>, ICriteriaRepository
     {
         private readonly ICriteriaGroupRepository _criteriaGroupRepository;
-        private readonly IEvaluateRepository _evaluateRepository;
+        private readonly ICriteriaOfAEvaluationRepository _evaluateOfAEvaluationRepository;
 
 
-        public CriteriaRepository(IMongoDbContext mongoDbContext, IEvaluateRepository evaluateRepository, ILogRepository auditLogRepository, ICriteriaGroupRepository criteriaGroupRepository) : base(mongoDbContext, auditLogRepository)
+        public CriteriaRepository(IMongoDbContext mongoDbContext, ICriteriaOfAEvaluationRepository evaluateOfAEvaluationRepository, ILogRepository auditLogRepository, ICriteriaGroupRepository criteriaGroupRepository) : base(mongoDbContext, auditLogRepository)
         {
             _criteriaGroupRepository = criteriaGroupRepository;
-            _evaluateRepository = evaluateRepository;
+            _evaluateOfAEvaluationRepository = evaluateOfAEvaluationRepository;
         }
 
         public override async Task CreateAsync(Criteria criteria)
@@ -32,17 +33,22 @@ namespace WebAPIwithMongoDB.Repositories.Repository
             }
         }
 
+        public async Task<IEnumerable<Criteria>> GetCriteriesByCriteriaGroupId(string criteriaGroupId){
+            var filter = Builders<Criteria>.Filter.Eq(e => e.CriteriaGroupId, criteriaGroupId);
+            return await _dbCollection.Find(filter).ToListAsync();
+        }
+
         public override async Task DeleteAsync(string id)
         {
             var criteria = await GetAsync(id);
             if (criteria == null)
                 throw new Exception("criteria not found");
 
-            // var evaluations = await _evaluateRepository.GetEvaluationsByCriteriaId(id);
-            // if (evaluations.Any())
-            // {
-            //     throw new Exception("criteria has evaluations. Please handle evaluations before deleting.");
-            // }
+            var evaluations = await _evaluateOfAEvaluationRepository.GetEvaluationesByCriteriaId(id);
+            if (evaluations.Any())
+            {
+                throw new Exception("Không thể xóa vì tiêu chí này đã được sử dụng!");
+            }
 
             await base.DeleteAsync(id);
 

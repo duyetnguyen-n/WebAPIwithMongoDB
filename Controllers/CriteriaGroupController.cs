@@ -13,10 +13,12 @@ namespace WebAPIwithMongoDB.Controllers
     public class CriteriaGroupController : ControllerBase
     {
         private readonly ICriteriaGroupRepository _criteriaGroupRepository;
+        private readonly ICriteriaRepository _criteriaRepository;
 
-        public CriteriaGroupController(ICriteriaGroupRepository criteriaGroupRepository)
+        public CriteriaGroupController(ICriteriaGroupRepository criteriaGroupRepository, ICriteriaRepository criteriaRepository)
         {
             _criteriaGroupRepository = criteriaGroupRepository;
+            _criteriaRepository = criteriaRepository;
         }
 
         [HttpGet]
@@ -69,6 +71,12 @@ namespace WebAPIwithMongoDB.Controllers
         {
             if (!await _criteriaGroupRepository.Exists(id))
                 return NotFound(new ApiResponse<string>(404, "Không tìm thấy nhóm tiêu chí", null));
+
+            var criteria = await _criteriaRepository.GetCriteriesByCriteriaGroupId(id);
+            if (criteria.Any())
+            {
+                return BadRequest(new ApiResponse<string>(400, "Xóa không thành công vì còn tiêu chí bên trong", null));
+            }
 
             await _criteriaGroupRepository.DeleteAsync(id);
             return Ok(new ApiResponse<string>(200, "Xóa thành công", null));

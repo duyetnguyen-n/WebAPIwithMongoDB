@@ -9,6 +9,6 @@ namespace WebAPIwithMongoDB.Repositories.Interface
 {
     public interface ICriteriaRepository : IBaseRepository<Criteria>
     {
-        
+        Task<IEnumerable<Criteria>> GetCriteriesByCriteriaGroupId(string criteriaGroupId);
     }
 }

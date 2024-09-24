@@ -12,11 +12,8 @@ namespace WebAPIwithMongoDB.Entities
         [BsonElement("userId"), BsonRepresentation(BsonType.ObjectId)]
         public string? UserId { get; set; }
 
-        [BsonElement("criteriaId"), BsonRepresentation(BsonType.ObjectId)]
-        public string? CriteriaId { get; set; }
-
-        [BsonElement("quantity"), BsonRepresentation(BsonType.Int32)]
-        public int? Quantity { get; set; }
+        [BsonElement("rankId"), BsonRepresentation(BsonType.ObjectId)]
+        public string? RankId { get; set; }
         
         [BsonElement("totalPointSubstraction"), BsonRepresentation(BsonType.Double)]
         public double TotalPointSubstraction { get; set; }

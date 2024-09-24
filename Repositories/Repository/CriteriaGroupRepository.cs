@@ -27,5 +27,6 @@ namespace WebAPIwithMongoDB.Repositories.Repository
             var update = Builders<CriteriaGroup>.Update.Inc(tg => tg.Count, -1);
             await _dbCollection.UpdateOneAsync(filter, update);
         }
+
     }
 }
