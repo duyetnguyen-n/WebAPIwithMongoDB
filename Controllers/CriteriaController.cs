@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebAPIwithMongoDB.Entities;
 using WebAPIwithMongoDB.Repositories.Interface;
+using WebAPIwithMongoDB.Services;
 
 namespace WebAPIwithMongoDB.Controllers
 {
@@ -22,25 +23,26 @@ namespace WebAPIwithMongoDB.Controllers
             _Criteria = Criteria;
         }
         [HttpGet]
-        public async Task<IEnumerable<Criteria>> GetCriterias()
+        public async Task<ActionResult<ApiResponse<IEnumerable<Criteria>>>> GetCriterias()
         {
-            return await _Criteria.GetAsync();
+            var criteria = await _Criteria.GetAsync();
+            return Ok(new ApiResponse<IEnumerable<Criteria>>(200, "Thành công", criteria));
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(Criteria))]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetCriteria(string id)
+        public async Task<ActionResult<ApiResponse<Criteria>>> GetCriteria(string id)
         {
             if (!await _Criteria.Exists(id))
-                return NotFound();
+                return NotFound(new ApiResponse<Criteria>(404, "Không tìm thấy tiêu chí", null));
             var Criteria = await _Criteria.GetAsync(id);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(Criteria);
+            return Ok(new ApiResponse<Criteria>(200, "Thành công", Criteria));
         }
 
         [HttpPost]
@@ -48,9 +50,12 @@ namespace WebAPIwithMongoDB.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> PostCriteria(Criteria Criteria)
+        public async Task<ActionResult<ApiResponse<Criteria>>> PostCriteria(Criteria Criteria)
         {
-
+            if (Criteria == null || !ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse<Criteria>(400, "Thất bại", null));
+            }
             await _Criteria.CreateAsync(new Criteria
             {
                 Name = Criteria.Name,
@@ -60,7 +65,7 @@ namespace WebAPIwithMongoDB.Controllers
                 PersonCheck = Criteria.PersonCheck
             });
 
-            return NoContent();
+            return Ok(new ApiResponse<Criteria>(200, "Thành công", Criteria));
         }
 
         [HttpPut]
@@ -68,10 +73,10 @@ namespace WebAPIwithMongoDB.Controllers
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> PutCriteria(Criteria Criteria)
+        public async Task<ActionResult<ApiResponse<Criteria>>> PutCriteria(Criteria Criteria)
         {
             if (!await _Criteria.Exists(Criteria.Id))
-                return NotFound();
+                return NotFound(new ApiResponse<Criteria>(404, "Không tìm thấy tiêu chí", null));
             var Criteriaold = await _Criteria.GetAsync(Criteria.Id);
 
             Criteriaold.Name = Criteria.Name;
@@ -85,23 +90,23 @@ namespace WebAPIwithMongoDB.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return NoContent();
+            return Ok(new ApiResponse<Criteria>(200, "Thành công", Criteria));
         }
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> DeleteCriteria(string id)
+        public async Task<ActionResult<ApiResponse<string>>> DeleteCriteria(string id)
         {
             if (!await _Criteria.Exists(id))
-                return NotFound();
+                return NotFound(new ApiResponse<string>(404, "Không tìm thấy tiêu chí", null));
 
             await _Criteria.DeleteAsync(id);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            return Ok();
+            return Ok(new ApiResponse<string>(200, "Xóa thành công", null));
         }
     }
 }

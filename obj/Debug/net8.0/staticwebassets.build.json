@@ -1,11 +1,58 @@
 {
   "Version": 1,
-  "Hash": "v1M1dleKsB3R/dTmrilYypQr+aAU3OmEW+nn8vJFsKg=",
+  "Hash": "VLhtnuZ0YxuV2iY0Hhco1mygCusvvtQG4cET2OpI38A=",
   "Source": "WebAPIwithMongoDB",
   "BasePath": "_content/WebAPIwithMongoDB",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "WebAPIwithMongoDB/wwwroot",
+      "Source": "WebAPIwithMongoDB",
+      "ContentRoot": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/",
+      "BasePath": "_content/WebAPIwithMongoDB",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/2061ef8a-b743-4c72-bd1d-9681ee9c0b4c_duyet.jpg",
+      "SourceId": "WebAPIwithMongoDB",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/",
+      "BasePath": "_content/WebAPIwithMongoDB",
+      "RelativePath": "uploads/2061ef8a-b743-4c72-bd1d-9681ee9c0b4c_duyet.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/uploads/2061ef8a-b743-4c72-bd1d-9681ee9c0b4c_duyet.jpg"
+    },
+    {
+      "Identity": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/duyet.jpg",
+      "SourceId": "WebAPIwithMongoDB",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/",
+      "BasePath": "_content/WebAPIwithMongoDB",
+      "RelativePath": "uploads/duyet.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/uploads/duyet.jpg"
+    }
+  ]
 }

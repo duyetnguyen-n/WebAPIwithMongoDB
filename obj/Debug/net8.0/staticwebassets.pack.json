@@ -1,0 +1,29 @@
+{
+  "Files": [
+    {
+      "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/2061ef8a-b743-4c72-bd1d-9681ee9c0b4c_duyet.jpg",
+      "PackagePath": "staticwebassets/uploads/2061ef8a-b743-4c72-bd1d-9681ee9c0b4c_duyet.jpg"
+    },
+    {
+      "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/duyet.jpg",
+      "PackagePath": "staticwebassets/uploads/duyet.jpg"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.WebAPIwithMongoDB.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.build.WebAPIwithMongoDB.props",
+      "PackagePath": "build\\WebAPIwithMongoDB.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.WebAPIwithMongoDB.props",
+      "PackagePath": "buildMultiTargeting\\WebAPIwithMongoDB.props"
+    },
+    {
+      "Id": "obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.WebAPIwithMongoDB.props",
+      "PackagePath": "buildTransitive\\WebAPIwithMongoDB.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

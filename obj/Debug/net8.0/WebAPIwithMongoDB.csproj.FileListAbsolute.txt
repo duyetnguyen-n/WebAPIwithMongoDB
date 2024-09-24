@@ -54,3 +54,4 @@
 /Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/bin/Debug/net8.0/Microsoft.IdentityModel.Tokens.dll
 /Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll
 /Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/bin/Debug/net8.0/System.Security.Permissions.dll
+/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/bin/Debug/net8.0/WebAPIwithMongoDB.staticwebassets.runtime.json

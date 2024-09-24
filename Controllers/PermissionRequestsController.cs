@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebAPIwithMongoDB.Entities;
 using WebAPIwithMongoDB.Repositories.Interface;
+using WebAPIwithMongoDB.Services;
 
 namespace WebAPIwithMongoDB.Controllers
 {
@@ -23,34 +24,38 @@ namespace WebAPIwithMongoDB.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IEnumerable<PermissionRequests>> GetPermissionRequestss()
+        public async Task<ActionResult<ApiResponse<IEnumerable<PermissionRequests>>>> GetPermissionRequestss()
         {
-            return await _PermissionRequests.GetAsync();
+            var PermissionRequests = await _PermissionRequests.GetAsync();
+            return Ok(new ApiResponse<IEnumerable<PermissionRequests>>(200, "Thành công", PermissionRequests));
         }
         [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(PermissionRequests))]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetPermissionRequests(string id)
+        public async Task<ActionResult<ApiResponse<PermissionRequests>>> GetPermissionRequests(string id)
         {
             if (!await _PermissionRequests.Exists(id))
-                return NotFound();
+                return NotFound(new ApiResponse<PermissionRequests>(404, "Không tìm thấy yêu cầu", null));
             var PermissionRequests = await _PermissionRequests.GetAsync(id);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(PermissionRequests);
+            return Ok(new ApiResponse<PermissionRequests>(200, "Thành công", PermissionRequests));
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult> PostPermissionRequests(PermissionRequests PermissionRequests)
+        public async Task<ActionResult<ApiResponse<PermissionRequests>>> PostPermissionRequests(PermissionRequests PermissionRequests)
         {
-
+            if (PermissionRequests == null || !ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse<PermissionRequests>(400, "Thất bại", null));
+            }
             await _PermissionRequests.CreateAsync(new PermissionRequests
             {
                 UserId = PermissionRequests.UserId,
@@ -62,23 +67,23 @@ namespace WebAPIwithMongoDB.Controllers
                 Comments = PermissionRequests.Comments
             });
 
-            return NoContent();
+            return Ok(new ApiResponse<PermissionRequests>(200, "Thành công", PermissionRequests));
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> DeletePermissionRequests(string id)
+        public async Task<ActionResult<ApiResponse<string>>> DeletePermissionRequests(string id)
         {
             if (!await _PermissionRequests.Exists(id))
-                return NotFound();
+                return NotFound(new ApiResponse<string>(404, "Không tìm thấy yêu cầu", null));
 
             await _PermissionRequests.DeleteAsync(id);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            return Ok();
+            return Ok(new ApiResponse<string>(200, "Xóa thành công", null));
         }
     }
 }

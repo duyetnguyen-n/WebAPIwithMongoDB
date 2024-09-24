@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using WebAPIwithMongoDB.Entities;
 using WebAPIwithMongoDB.Repositories.Interface;
+using WebAPIwithMongoDB.Services;
 
 namespace WebAPIwithMongoDB.Controllers
 {
@@ -22,51 +23,55 @@ namespace WebAPIwithMongoDB.Controllers
             _TeachGroup = TeachGroup;
         }
         [HttpGet]
-        public async Task<IEnumerable<TeachGroup>> GetTeachGroups()
+        public async Task<ActionResult<ApiResponse<IEnumerable<TeachGroup>>>> GetTeachGroups()
         {
-            return await _TeachGroup.GetAsync();
+            var TeachGroups = await _TeachGroup.GetAsync();
+            return Ok(new ApiResponse<IEnumerable<TeachGroup>>(200, "Thành công", TeachGroups));
         }
 
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(TeachGroup))]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetTeachGroup(string id)
+        public async Task<ActionResult<ApiResponse<TeachGroup>>> GetTeachGroup(string id)
         {
             if (!await _TeachGroup.Exists(id))
-                return NotFound();
+                return NotFound(new ApiResponse<TeachGroup>(404, "Không tìm thấy tổ", null));
             var TeachGroup = await _TeachGroup.GetAsync(id);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok(TeachGroup);
+            return Ok(new ApiResponse<TeachGroup>(200, "Thành công", TeachGroup));
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
-        public async Task<ActionResult> PostTeachGroup(TeachGroup TeachGroup)
+        public async Task<ActionResult<ApiResponse<TeachGroup>>> PostTeachGroup(TeachGroup TeachGroup)
         {
-
+            if (TeachGroup == null || !ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse<TeachGroup>(400, "Thất bại", null));
+            }
             await _TeachGroup.CreateAsync(new TeachGroup
             {
                 Name = TeachGroup.Name,
                 Count = 0
             });
 
-            return NoContent();
+            return Ok(new ApiResponse<TeachGroup>(200, "Thành công", TeachGroup));
         }
         [Authorize(Roles = "Admin")]
         [HttpPut]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> PutTeachGroup(TeachGroup TeachGroup)
+        public async Task<ActionResult<ApiResponse<TeachGroup>>> PutTeachGroup(TeachGroup TeachGroup)
         {
             if (!await _TeachGroup.Exists(TeachGroup.Id))
-                return NotFound();
+                return NotFound(new ApiResponse<TeachGroup>(404, "Không tìm thấy tổ", null));
             var TeachGroupold = await _TeachGroup.GetAsync(TeachGroup.Id);
 
             TeachGroupold.Name = TeachGroup.Name;
@@ -76,23 +81,23 @@ namespace WebAPIwithMongoDB.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return NoContent();
+            return Ok(new ApiResponse<TeachGroup>(200, "Thành công", TeachGroup));
         }
         [Authorize(Roles = "Admin")]
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<ActionResult> DeleteTeachGroup(string id)
+        public async Task<ActionResult<ApiResponse<string>>> DeleteTeachGroup(string id)
         {
             if (!await _TeachGroup.Exists(id))
-                return NotFound();
+                return NotFound(new ApiResponse<string>(404, "Không tìm thấy tổ", null));
 
             await _TeachGroup.DeleteAsync(id);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            return Ok();
+            return Ok(new ApiResponse<string>(200, "Xóa thành công", null));
         }
     }
 }

@@ -43,7 +43,27 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["Jwt:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
     };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine($"Token validation failed: {context.Exception.Message}");
+            return Task.CompletedTask;
+        },
+        OnTokenValidated = context =>
+        {
+            Console.WriteLine("Token is valid.");
+            return Task.CompletedTask;
+        },
+        OnChallenge = context =>
+        {
+            Console.WriteLine($"OnChallenge Error: {context.Error}, {context.ErrorDescription}");
+            return Task.CompletedTask;
+        }
+    };
 });
+
 
 // Cấu hình Swagger để hỗ trợ Bearer Token
 builder.Services.AddSwaggerGen(c =>
@@ -77,12 +97,10 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// Add services to the container.
-builder.Services.AddControllers();  // Đăng ký dịch vụ controller
+// Đăng ký các dịch vụ cần thiết
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection(nameof(MongoSettings)));
-
 builder.Services.AddScoped<IMongoDbContext, MongoDbContext>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPositionRepository, PositionRepository>();
@@ -98,21 +116,48 @@ builder.Services.AddScoped<IPermissionRequestsRepository, PermissionRequestsRepo
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.Use(async (context, next) =>
+{
+    var token = context.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+    if (!string.IsNullOrEmpty(token))
+    {
+        Console.WriteLine($"Received Token: {token}");
+    }
+
+    // Kiểm tra nếu người dùng không xác thực được
+    if (!context.User.Identity.IsAuthenticated)
+    {
+        Console.WriteLine("User is not authenticated");
+    }
+    else
+    {
+        Console.WriteLine($"User {context.User.Identity.Name} is authenticated");
+    }
+
+    await next();
+});
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads") // Trỏ đến thư mục uploads trong wwwroot
+    ),
+    RequestPath = "/uploads"
+});
+
 app.UseCors("AllowSpecificOrigins");
 
 app.UseHttpsRedirection();
 
-// Thêm Authentication trước Authorization
-app.UseAuthentication();  // Bắt buộc phải có dòng này để kích hoạt Authentication
+app.UseAuthentication(); // Kích hoạt xác thực JWT
+app.UseAuthorization(); // Kích hoạt phân quyền
 
-app.UseAuthorization();
 
 app.MapControllers();
 

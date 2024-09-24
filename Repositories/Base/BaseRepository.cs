@@ -109,14 +109,6 @@ namespace WebAPIwithMongoDB.Repositories.Base
         {
             var entityType = typeof(TEntity).Name;
 
-            bool isReferenced = await IsReferencedInAnyCollectionAsync(id, entityType);
-            Console.WriteLine($"EntityType: {entityType}, ID: {id}, IsReferenced: {isReferenced}"); // Debugging line
-
-            if (isReferenced==false)
-            {
-                throw new InvalidOperationException("Không thể xóa vì đang có liên kết với các bảng khác.");
-            }
-
             ObjectId objectId = new ObjectId(id);
             FilterDefinition<TEntity> filter = Builders<TEntity>.Filter.Eq("_id", objectId);
 
@@ -149,7 +141,6 @@ namespace WebAPIwithMongoDB.Repositories.Base
             await _auditLogRepository.CreateAsync(log);
         }
 
-
         public async Task DeleteAllAsync()
         {
             var filter = Builders<TEntity>.Filter.Empty;
@@ -179,57 +170,57 @@ namespace WebAPIwithMongoDB.Repositories.Base
             return await _dbCollection.FindAsync<TEntity>(filter);
         }
 
-        private static readonly Dictionary<string, List<string>> ReferenceMapping = new Dictionary<string, List<string>>
-        {
-            { "User", new List<string> { "Id", "PositionId", "TeachGroupId" } },
-            { "Position", new List<string> { "Id", "PersonCheck", "PermissionOfAPositionPositionId" } },
-            { "TeachGroup", new List<string> { "Id" } },
-            { "PermissionOfAPosition", new List<string> { "PositionId", "PermissionId" } },
-            { "Criteria", new List<string> { "PersonCheck", "CriteriaGroupId" } },
-            { "CriteriaGroup", new List<string> { "Id" } },
-            { "Evaluate", new List<string> { "UserId", "CriteriaId", "RankId" } },
-            { "Log", new List<string> { "UserId" } },
-            { "PermissionRequests", new List<string> { "UserId", "RequestedPermissionId", "ReviewerId" } }
-        };
+        // private static readonly Dictionary<string, List<string>> ReferenceMapping = new Dictionary<string, List<string>>
+        // {
+        //     { "User", new List<string> { "Id", "PositionId", "TeachGroupId" } },
+        //     { "Position", new List<string> { "Id", "PersonCheck", "PermissionOfAPositionPositionId" } },
+        //     { "TeachGroup", new List<string> { "Id" } },
+        //     { "PermissionOfAPosition", new List<string> { "PositionId", "PermissionId" } },
+        //     { "Criteria", new List<string> { "PersonCheck", "CriteriaGroupId" } },
+        //     { "CriteriaGroup", new List<string> { "Id" } },
+        //     { "Evaluate", new List<string> { "UserId", "CriteriaId", "RankId" } },
+        //     { "Log", new List<string> { "UserId" } },
+        //     { "PermissionRequests", new List<string> { "UserId", "RequestedPermissionId", "ReviewerId" } }
+        // };
 
 
-        public virtual async Task<bool> IsReferencedInAnyCollectionAsync(string id, string entityType)
-        {
-            ObjectId objectId;
+        // public virtual async Task<bool> IsReferencedInAnyCollectionAsync(string id, string entityType)
+        // {
+        //     ObjectId objectId;
 
-            if (!ObjectId.TryParse(id, out objectId))
-            {
-                throw new ArgumentException("ID không hợp lệ");
-            }
+        //     if (!ObjectId.TryParse(id, out objectId))
+        //     {
+        //         throw new ArgumentException("ID không hợp lệ");
+        //     }
 
-            if (!ReferenceMapping.ContainsKey(entityType))
-            {
-                throw new ArgumentException($"Không tìm thấy cấu hình cho loại đối tượng {entityType}");
-            }
+        //     if (!ReferenceMapping.ContainsKey(entityType))
+        //     {
+        //         throw new ArgumentException($"Không tìm thấy cấu hình cho loại đối tượng {entityType}");
+        //     }
 
-            var tasks = new List<Task<long>>();
+        //     var tasks = new List<Task<long>>();
 
-            foreach (var collectionName in ReferenceMapping.Keys)
-            {
-                var referenceFields = ReferenceMapping[collectionName];
-                var collection = _mongoContext.GetCollection<BsonDocument>(collectionName);
+        //     foreach (var collectionName in ReferenceMapping.Keys)
+        //     {
+        //         var referenceFields = ReferenceMapping[collectionName];
+        //         var collection = _mongoContext.GetCollection<BsonDocument>(collectionName);
 
-                foreach (var referenceField in referenceFields)
-                {
-                    if (referenceField == "Id" || ReferenceMapping[entityType].Contains(referenceField))
-                    {
-                        var filter = Builders<BsonDocument>.Filter.Eq(referenceField, objectId);
-                        tasks.Add(collection.CountDocumentsAsync(filter));
-                        Console.WriteLine($"Checking collection: {collectionName}, field: {referenceField}, id: {id}");
-                    }
-                }
-            }
+        //         foreach (var referenceField in referenceFields)
+        //         {
+        //             if (referenceField == "Id" || ReferenceMapping[entityType].Contains(referenceField))
+        //             {
+        //                 var filter = Builders<BsonDocument>.Filter.Eq(referenceField, objectId);
+        //                 tasks.Add(collection.CountDocumentsAsync(filter));
+        //                 Console.WriteLine($"Checking collection: {collectionName}, field: {referenceField}, id: {id}");
+        //             }
+        //         }
+        //     }
 
-            var results = await Task.WhenAll(tasks);
-            bool isReferenced = results.Any(count => count > 0);
-            Console.WriteLine($"IsReferenced: {isReferenced}");
-            return isReferenced;
-        }
+        //     var results = await Task.WhenAll(tasks);
+        //     bool isReferenced = results.Any(count => count > 0);
+        //     Console.WriteLine($"IsReferenced: {isReferenced}");
+        //     return isReferenced;
+        // }
 
     }
 }
