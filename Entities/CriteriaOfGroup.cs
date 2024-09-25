@@ -14,5 +14,7 @@ namespace WebAPIwithMongoDB.Entities
 
         [BsonElement("criteriaGroupId"), BsonRepresentation(BsonType.ObjectId)]
         public string? CriteriaGroupId { get; set; }
+        [BsonElement("TimeStamp"), BsonRepresentation(BsonType.DateTime)]
+        public DateTime? TimeStamp { get; set; }
     }
 }

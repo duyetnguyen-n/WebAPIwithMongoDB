@@ -11,7 +11,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
 {
     public class PositionRepository : BaseRepository<Position>,IPositionRepository
     {
-        public PositionRepository(IMongoDbContext mongoDbContext, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository)
+        public PositionRepository(IMongoDbContext mongoDbContext, IHttpContextAccessor httpContextAccessor, ILogRepository auditLogRepository) : base(mongoDbContext, httpContextAccessor, auditLogRepository)
         {
         
         }

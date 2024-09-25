@@ -59,7 +59,8 @@ namespace WebAPIwithMongoDB.Controllers
             {
                 Name = Rank.Name,
                 PointRangeStart = Rank.PointRangeStart,
-                PointRangeEnd = Rank.PointRangeEnd
+                PointRangeEnd = Rank.PointRangeEnd,
+                TimeStamp = DateTime.Now
 
             });
 

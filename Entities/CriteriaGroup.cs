@@ -19,6 +19,8 @@ namespace WebAPIwithMongoDB.Entities
 
         [BsonElement("role"), BsonRepresentation(BsonType.String)]
         [Required(ErrorMessage = "Loại tiêu chí không được để trống")]
-        public string? Role { get; set; }  
+        public string? Role { get; set; }
+        [BsonElement("TimeStamp"), BsonRepresentation(BsonType.DateTime)]
+        public DateTime? TimeStamp { get; set; }
     }
 }

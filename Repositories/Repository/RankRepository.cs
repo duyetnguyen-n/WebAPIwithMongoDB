@@ -12,7 +12,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
     public class RankRepository : BaseRepository<Rank>, IRankRepository
     {
         private readonly IEvaluateRepository _evaluateRepository;
-        public RankRepository(IMongoDbContext mongoDbContext, IEvaluateRepository evaluateRepository, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository)
+        public RankRepository(IMongoDbContext mongoDbContext, IHttpContextAccessor httpContextAccessor, IEvaluateRepository evaluateRepository, ILogRepository auditLogRepository) : base(mongoDbContext,httpContextAccessor, auditLogRepository)
         {
             _evaluateRepository = evaluateRepository; 
         }

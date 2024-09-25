@@ -17,15 +17,22 @@ namespace WebAPIwithMongoDB.Controllers
     public class EvaluateController : Controller
     {
         private readonly IEvaluateRepository _Evaluate;
+        private readonly IRankRepository _rankRepository;
 
-        public EvaluateController(IEvaluateRepository Evaluate)
+        public EvaluateController(IEvaluateRepository Evaluate, IRankRepository rankRepository)
         {
             _Evaluate = Evaluate;
+            _rankRepository = rankRepository;
         }
-        [HttpGet]
-        public async Task<ActionResult<ApiResponse<IEnumerable<Evaluate>>>> GetEvaluates()
+        [HttpGet("all")]
+        [ProducesResponseType(200, Type = typeof(ApiResponse<IEnumerable<Evaluate>>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<ApiResponse<IEnumerable<Evaluate>>>> GetAllEvaluates()
         {
             var Evaluate = await _Evaluate.GetAsync();
+            
+
             return Ok(new ApiResponse<IEnumerable<Evaluate>>(200, "Thành công", Evaluate));
         }
 
@@ -44,6 +51,19 @@ namespace WebAPIwithMongoDB.Controllers
 
             return Ok(new ApiResponse<Evaluate>(200, "Thành công", Evaluate));
         }
+        [HttpGet("User/{userId}")]
+        [ProducesResponseType(200, Type = typeof(Evaluate))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<ApiResponse<IEnumerable<Evaluate>>>> GetEvaluateByUserId(string userId)
+        {
+            var Evaluate = await _Evaluate.GetEvaluationsByUserId(userId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(new ApiResponse<IEnumerable<Evaluate>>(200, "Thành công", Evaluate));
+        }
         [HttpPost]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
@@ -54,17 +74,71 @@ namespace WebAPIwithMongoDB.Controllers
             {
                 return BadRequest(new ApiResponse<Evaluate>(400, "Thất bại", null));
             }
-            await _Evaluate.CreateAsync(new Evaluate
+            var createdEvaluate = new Evaluate
             {
+                Name = Evaluate.Name,
                 UserId = Evaluate.UserId,
                 RankId = Evaluate.RankId,
-                TotalPointSubstraction = Evaluate.TotalPointSubstraction,
-                TotalPointAddition = Evaluate.TotalPointAddition
-            });
+                TotalPointSubstraction = 0,
+                TotalPointAddition = 0,
+                From = Evaluate.From,
+                To = Evaluate.To,
+                TotalPoint = 0,
+                TimeStamp = DateTime.Now,
+                UploadDay = DateTime.Now
+            };
 
-            return Ok(new ApiResponse<Evaluate>(200, "Thành công", Evaluate));
+            await _Evaluate.CreateAsync(createdEvaluate);
+            return Ok(new ApiResponse<Evaluate>(200, "Thành công", createdEvaluate));
+
         }
-        [HttpDelete]
+
+        [HttpPut]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<ApiResponse<Evaluate>>> PutEvaluate(Evaluate Evaluate)
+        {
+            if (!await _Evaluate.Exists(Evaluate.Id))
+                return NotFound(new ApiResponse<Evaluate>(404, "Không tìm thấy tiêu chí", null));
+
+            var Evaluateold = await _Evaluate.GetAsync(Evaluate.Id);
+            if (Evaluateold == null)
+                return NotFound(new ApiResponse<Evaluate>(404, "Không tìm thấy đánh giá", null));
+
+            // Cập nhật các thuộc tính của Evaluateold
+            Evaluateold.Name = Evaluate.Name;
+            Evaluateold.UserId = Evaluate.UserId;
+            Evaluateold.TotalPointSubstraction = Evaluate.TotalPointSubstraction; // Cập nhật đúng giá trị từ yêu cầu
+            Evaluateold.TotalPointAddition = Evaluate.TotalPointAddition; // Cập nhật đúng giá trị từ yêu cầu
+            Evaluateold.From = Evaluate.From;
+            Evaluateold.To = Evaluate.To;
+            Evaluateold.TimeStamp = DateTime.Now;
+            Evaluateold.ConfirmDay = Evaluate.ConfirmDay;
+
+            // Tính toán TotalPoint
+            Evaluateold.TotalPoint = Evaluateold.TotalPoint;
+
+            // Kiểm tra và cập nhật RankId
+            var ranks = await _rankRepository.GetAsync(); // Lấy tất cả các rank
+            var rankId = ranks.FirstOrDefault(rank =>
+                Evaluateold.TotalPoint >= rank.PointRangeStart &&
+                Evaluateold.TotalPoint <= rank.PointRangeEnd)?.Id;
+
+            if (rankId != null)
+            {
+                Evaluateold.RankId = rankId; // Cập nhật RankId
+            }
+
+            await _Evaluate.UpdateAsync(Evaluate.Id, Evaluateold); // Cập nhật vào cơ sở dữ liệu
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(new ApiResponse<Evaluate>(200, "Thành công", Evaluateold));
+        }
+
+        [HttpDelete("{id}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]

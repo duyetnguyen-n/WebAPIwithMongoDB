@@ -13,7 +13,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
 {
     public class TeachGroupRepository : BaseRepository<TeachGroup>,ITeachGroupRepository
     {
-        public TeachGroupRepository(IMongoDbContext mongoDbContext, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository)
+        public TeachGroupRepository(IMongoDbContext mongoDbContext, IHttpContextAccessor httpContextAccessor, ILogRepository auditLogRepository) : base(mongoDbContext, httpContextAccessor, auditLogRepository)
         {
         }
         public async Task IncrementTeachGroupCount(string teachGroupId)

@@ -12,7 +12,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
 {
     public class EvaluateRepository : BaseRepository<Evaluate>, IEvaluateRepository
     {
-        public EvaluateRepository(IMongoDbContext mongoDbContext, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository)
+        public EvaluateRepository(IMongoDbContext mongoDbContext, IHttpContextAccessor httpContextAccessor, ILogRepository auditLogRepository) : base(mongoDbContext, httpContextAccessor, auditLogRepository)
         {
             
         }

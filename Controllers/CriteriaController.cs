@@ -64,7 +64,8 @@ namespace WebAPIwithMongoDB.Controllers
                 Points = Criteria.Points,
                 CriteriaGroupId = Criteria.CriteriaGroupId,
                 Notes = Criteria.Notes,
-                PersonCheck = Criteria.PersonCheck
+                PersonCheck = Criteria.PersonCheck,
+                TimeStamp = DateTime.Now
             });
 
             return Ok(new ApiResponse<Criteria>(200, "Thành công", Criteria));
@@ -92,6 +93,7 @@ namespace WebAPIwithMongoDB.Controllers
             Criteriaold.CriteriaGroupId = Criteria.CriteriaGroupId;
             Criteriaold.Notes = Criteria.Notes;
             Criteriaold.PersonCheck = Criteria.PersonCheck;
+            Criteriaold.TimeStamp = DateTime.Now;
 
             await _Criteria.UpdateAsync(Criteria.Id, Criteria);
 

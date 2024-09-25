@@ -14,5 +14,7 @@ namespace WebAPIwithMongoDB.Repositories.Interface
         Task CreateAsync(Log obj);
         Task DeleteAsync(string id);
         Task DeleteAllAsync();
+        Task DeleteMultipleAsync(List<string> ids);
+
     }
 }

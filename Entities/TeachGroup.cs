@@ -14,5 +14,7 @@ namespace WebAPIwithMongoDB.Entities
 
         [BsonElement("count"), BsonRepresentation(BsonType.Int32)]
         public int Count { get; set; }
+        [BsonElement("TimeStamp"), BsonRepresentation(BsonType.DateTime)]
+        public DateTime? TimeStamp { get; set; }
     }
 }

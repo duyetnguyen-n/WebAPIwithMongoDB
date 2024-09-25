@@ -60,7 +60,8 @@ namespace WebAPIwithMongoDB.Controllers
             await _TeachGroup.CreateAsync(new TeachGroup
             {
                 Name = TeachGroup.Name,
-                Count = 0
+                Count = 0,
+                TimeStamp = DateTime.Now
             });
 
             return Ok(new ApiResponse<TeachGroup>(200, "Thành công", TeachGroup));
@@ -77,6 +78,8 @@ namespace WebAPIwithMongoDB.Controllers
             var TeachGroupold = await _TeachGroup.GetAsync(TeachGroup.Id);
 
             TeachGroupold.Name = TeachGroup.Name;
+            TeachGroupold.Count = TeachGroup.Count;
+            TeachGroupold.TimeStamp = DateTime.Now;
 
             await _TeachGroup.UpdateAsync(TeachGroup.Id, TeachGroup);
 

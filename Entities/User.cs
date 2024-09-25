@@ -42,6 +42,8 @@ namespace WebAPIwithMongoDB.Entities
 
         [BsonElement("avatar"), BsonRepresentation(BsonType.String)]
         public string? Avatar { get; set; }
+        [BsonElement("TimeStamp"), BsonRepresentation(BsonType.DateTime)]
+        public DateTime? TimeStamp { get; set; }
 
     }
 }

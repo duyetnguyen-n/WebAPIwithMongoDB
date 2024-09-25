@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
+using WebAPIwithMongoDB.Services;
+using WebAPIwithMongoDB.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -111,9 +113,14 @@ builder.Services.AddScoped<ICriteriaRepository, CriteriaRepository>();
 builder.Services.AddScoped<IEvaluateRepository, EvaluateRepository>();
 builder.Services.AddScoped<IRankRepository, RankRepository>();
 builder.Services.AddScoped<ILogRepository, LogRepository>();
+builder.Services.AddScoped<PointsResetService>();
 builder.Services.AddScoped<IPermissionRequestsRepository, PermissionRequestsRepository>();
+builder.Services.AddHttpContextAccessor(); 
+builder.Services.AddHostedService<PointsResetHostedService>();
+
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())

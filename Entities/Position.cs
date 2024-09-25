@@ -15,5 +15,8 @@ namespace WebAPIwithMongoDB.Entities
 
         [BsonElement("name"), BsonRepresentation(BsonType.String)]
         public string? Name { get; set; }
+        
+        [BsonElement("TimeStamp"), BsonRepresentation(BsonType.DateTime)]
+        public DateTime? TimeStamp { get; set; }
     }
 }

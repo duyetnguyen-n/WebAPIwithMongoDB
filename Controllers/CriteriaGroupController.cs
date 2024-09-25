@@ -50,7 +50,8 @@ namespace WebAPIwithMongoDB.Controllers
             {
                 Name = criteriaGroup.Name,
                 Count = 0,
-                Role = criteriaGroup.Role
+                Role = criteriaGroup.Role,
+                TimeStamp = DateTime.Now
             });
 
             return Ok(new ApiResponse<CriteriaGroup>(200, "Thành công", criteriaGroup));
@@ -61,7 +62,7 @@ namespace WebAPIwithMongoDB.Controllers
         {
             if (!await _criteriaGroupRepository.Exists(criteriaGroup.Id))
                 return NotFound(new ApiResponse<CriteriaGroup>(404, "Không tìm thấy nhóm tiêu chí", null));
-
+            
             await _criteriaGroupRepository.UpdateAsync(criteriaGroup.Id, criteriaGroup);
             return Ok(new ApiResponse<CriteriaGroup>(200, "Thành công", criteriaGroup));
         }

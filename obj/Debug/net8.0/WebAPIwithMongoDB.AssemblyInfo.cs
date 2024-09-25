@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WebAPIwithMongoDB")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d8a8ddef57025a67376d81ff4bdea951a14d96bd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12d08d86f860ec15d29f5470f03e46bf2b9fcb62")]
 [assembly: System.Reflection.AssemblyProductAttribute("WebAPIwithMongoDB")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WebAPIwithMongoDB")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -66,7 +66,7 @@ namespace WebAPIwithMongoDB.Controllers
             return Ok(new ApiResponse<Log>(200, "Thành công", Log));
         }
         [Authorize(Roles = "Admin")]
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
@@ -80,6 +80,23 @@ namespace WebAPIwithMongoDB.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
             return Ok(new ApiResponse<string>(200, "Xóa thành công", null));
+        }
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(200)]
+        [HttpDelete("delete-multiple")]
+        public async Task<IActionResult> DeleteMultipleLogs([FromBody] List<string> ids)
+        {
+            try
+            {
+                await _Log.DeleteMultipleAsync(ids);
+                return Ok(new ApiResponse<string>(200, "Xóa thành công các mục được chọn", null));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse<string>(200, "Lỗi rồi còn đâu", null));
+            }
         }
     }
 }

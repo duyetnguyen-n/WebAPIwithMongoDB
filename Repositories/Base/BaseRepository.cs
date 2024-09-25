@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -15,19 +17,28 @@ namespace WebAPIwithMongoDB.Repositories.Base
         protected readonly IMongoDbContext _mongoContext;
         protected IMongoCollection<TEntity> _dbCollection;
         private readonly ILogRepository _auditLogRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        protected BaseRepository(IMongoDbContext mongoContext, ILogRepository auditLogRepository)
+
+        protected BaseRepository(IMongoDbContext mongoContext, IHttpContextAccessor httpContextAccessor, ILogRepository auditLogRepository)
         {
             _mongoContext = mongoContext;
             _dbCollection = _mongoContext.GetCollection<TEntity>(typeof(TEntity).Name);
             _auditLogRepository = auditLogRepository;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IEnumerable<TEntity>> GetAsync()
         {
-            IAsyncCursor<TEntity> query = await Query(Builders<TEntity>.Filter.Empty);
-            return await query.ToListAsync();
+            var sortDefinition = Builders<TEntity>.Sort.Descending("TimeStamp");
+            var filter = Builders<TEntity>.Filter.Empty;
+            var query = await _dbCollection.Find(filter)
+                                            .Sort(sortDefinition)
+                                            .ToListAsync();
+
+            return query;
         }
+
 
         public async Task<TEntity> GetAsync(string id)
         {
@@ -54,9 +65,18 @@ namespace WebAPIwithMongoDB.Repositories.Base
             {
                 description = $"admin đã thêm {obj.Id} vào {objType.Name}";
             }
+            string userId = null; 
+
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            if (user?.Identity?.IsAuthenticated == true)
+            {
+                userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
+
             var log = new Log
             {
-                UserId = "66ea2c41933b21975a8fb8d1",
+                UserId = userId,
                 Action = "Create",
                 TimeStamp = DateTime.UtcNow,
                 Status = "available",
@@ -92,10 +112,17 @@ namespace WebAPIwithMongoDB.Repositories.Base
             await _dbCollection.ReplaceOneAsync(filter, obj);
 
             var description = changes.Any() ? string.Join(", ", changes) : "Không có thay đổi nào";
+            string userId = null;
 
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            if (user?.Identity?.IsAuthenticated == true)
+            {
+                userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
             var log = new Log
             {
-                UserId = "66ea2c41933b21975a8fb8d1", 
+                UserId = userId, 
                 Action = "Update",
                 TimeStamp = DateTime.UtcNow,
                 Status = "available",
@@ -112,15 +139,16 @@ namespace WebAPIwithMongoDB.Repositories.Base
             ObjectId objectId = new ObjectId(id);
             FilterDefinition<TEntity> filter = Builders<TEntity>.Filter.Eq("_id", objectId);
 
+            var entity = await _dbCollection.Find(filter).FirstOrDefaultAsync();
+
             await _dbCollection.DeleteOneAsync(filter);
 
             var objType = typeof(TEntity);
-            var nameProperty = objType.GetProperty("name");
+            var nameProperty = objType.GetProperty("Name");
 
             string description;
-            if (nameProperty != null)
+            if (nameProperty != null && entity != null)
             {
-                var entity = await _dbCollection.Find(filter).FirstOrDefaultAsync();
                 var nameValue = nameProperty.GetValue(entity)?.ToString();
                 description = $"admin đã xóa {nameValue} trong {objType.Name}";
             }
@@ -129,9 +157,18 @@ namespace WebAPIwithMongoDB.Repositories.Base
                 description = $"admin đã xóa đối tượng có id {id} trong {objType.Name}";
             }
 
+            string userId = null;
+
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            if (user?.Identity?.IsAuthenticated == true)
+            {
+                userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
+
             var log = new Log
             {
-                UserId = "66ea2c41933b21975a8fb8d1",
+                UserId = userId,
                 Action = "Delete",
                 TimeStamp = DateTime.UtcNow,
                 Status = "available",
@@ -145,10 +182,17 @@ namespace WebAPIwithMongoDB.Repositories.Base
         {
             var filter = Builders<TEntity>.Filter.Empty;
             await _dbCollection.DeleteManyAsync(filter);
+            string userId = null;
 
+            var user = _httpContextAccessor.HttpContext?.User;
+
+            if (user?.Identity?.IsAuthenticated == true)
+            {
+                userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            }
             var log = new Log
             {
-                UserId = "66ea2c41933b21975a8fb8d1",
+                UserId = userId,
                 Action = "DeleteAll",
                 TimeStamp = DateTime.UtcNow,
                 Status = "available",
@@ -170,57 +214,7 @@ namespace WebAPIwithMongoDB.Repositories.Base
             return await _dbCollection.FindAsync<TEntity>(filter);
         }
 
-        // private static readonly Dictionary<string, List<string>> ReferenceMapping = new Dictionary<string, List<string>>
-        // {
-        //     { "User", new List<string> { "Id", "PositionId", "TeachGroupId" } },
-        //     { "Position", new List<string> { "Id", "PersonCheck", "PermissionOfAPositionPositionId" } },
-        //     { "TeachGroup", new List<string> { "Id" } },
-        //     { "PermissionOfAPosition", new List<string> { "PositionId", "PermissionId" } },
-        //     { "Criteria", new List<string> { "PersonCheck", "CriteriaGroupId" } },
-        //     { "CriteriaGroup", new List<string> { "Id" } },
-        //     { "Evaluate", new List<string> { "UserId", "CriteriaId", "RankId" } },
-        //     { "Log", new List<string> { "UserId" } },
-        //     { "PermissionRequests", new List<string> { "UserId", "RequestedPermissionId", "ReviewerId" } }
-        // };
-
-
-        // public virtual async Task<bool> IsReferencedInAnyCollectionAsync(string id, string entityType)
-        // {
-        //     ObjectId objectId;
-
-        //     if (!ObjectId.TryParse(id, out objectId))
-        //     {
-        //         throw new ArgumentException("ID không hợp lệ");
-        //     }
-
-        //     if (!ReferenceMapping.ContainsKey(entityType))
-        //     {
-        //         throw new ArgumentException($"Không tìm thấy cấu hình cho loại đối tượng {entityType}");
-        //     }
-
-        //     var tasks = new List<Task<long>>();
-
-        //     foreach (var collectionName in ReferenceMapping.Keys)
-        //     {
-        //         var referenceFields = ReferenceMapping[collectionName];
-        //         var collection = _mongoContext.GetCollection<BsonDocument>(collectionName);
-
-        //         foreach (var referenceField in referenceFields)
-        //         {
-        //             if (referenceField == "Id" || ReferenceMapping[entityType].Contains(referenceField))
-        //             {
-        //                 var filter = Builders<BsonDocument>.Filter.Eq(referenceField, objectId);
-        //                 tasks.Add(collection.CountDocumentsAsync(filter));
-        //                 Console.WriteLine($"Checking collection: {collectionName}, field: {referenceField}, id: {id}");
-        //             }
-        //         }
-        //     }
-
-        //     var results = await Task.WhenAll(tasks);
-        //     bool isReferenced = results.Any(count => count > 0);
-        //     Console.WriteLine($"IsReferenced: {isReferenced}");
-        //     return isReferenced;
-        // }
+        
 
     }
 }

@@ -18,10 +18,13 @@ namespace WebAPIwithMongoDB.Entities
         [BsonElement("notes"), BsonRepresentation(BsonType.String)]
         public string? Notes { get; set; }
 
-        [BsonElement("personCheck"), BsonRepresentation(BsonType.ObjectId)]
+        [BsonElement("personCheck"), BsonRepresentation(BsonType.String)]
         public string? PersonCheck { get; set; }  
 
         [BsonElement("criteriaGroupId"), BsonRepresentation(BsonType.ObjectId)]
-        public string? CriteriaGroupId { get; set; }  
+        public string? CriteriaGroupId { get; set; }
+
+        [BsonElement("TimeStamp"), BsonRepresentation(BsonType.DateTime)]
+        public DateTime? TimeStamp { get; set; }
     }
 }

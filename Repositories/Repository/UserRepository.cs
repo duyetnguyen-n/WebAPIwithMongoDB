@@ -17,8 +17,8 @@ namespace WebAPIwithMongoDB.Repositories.Repository
         private readonly IEvaluateRepository _evaluateRepository; 
         private readonly IUserRepository _users; 
 
-        public UserRepository(IMongoDbContext mongoContext, ITeachGroupRepository teachGroupRepository, IEvaluateRepository evaluateRepository, ILogRepository auditLogRepository)
-            : base(mongoContext, auditLogRepository)
+        public UserRepository(IMongoDbContext mongoContext, IHttpContextAccessor httpContextAccessor, ITeachGroupRepository teachGroupRepository, IEvaluateRepository evaluateRepository, ILogRepository auditLogRepository)
+            : base(mongoContext,httpContextAccessor, auditLogRepository)
         {
             _teachGroupRepository = teachGroupRepository;
             _evaluateRepository = evaluateRepository;

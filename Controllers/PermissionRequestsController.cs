@@ -60,7 +60,7 @@ namespace WebAPIwithMongoDB.Controllers
             {
                 UserId = PermissionRequests.UserId,
                 RequetedPermissionId  = PermissionRequests.RequetedPermissionId,
-                TimeStamp = PermissionRequests.TimeStamp,
+                TimeStamp = DateTime.Now,
                 Status = PermissionRequests.Status,
                 ReviewerId = PermissionRequests.ReviewerId,
                 Description = PermissionRequests.Description,

@@ -13,7 +13,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
 {
     public class CriteriaGroupRepository : BaseRepository<CriteriaGroup>, ICriteriaGroupRepository
     {
-        public CriteriaGroupRepository(IMongoDbContext mongoDbContext, ILogRepository auditLogRepository) : base(mongoDbContext, auditLogRepository){}
+        public CriteriaGroupRepository(IMongoDbContext mongoDbContext, IHttpContextAccessor httpContextAccessor, ILogRepository auditLogRepository) : base(mongoDbContext,httpContextAccessor, auditLogRepository){}
         public async Task IncrementCriteriaGroupCount(string criteriaGroupId)
         {
             var filter = Builders<CriteriaGroup>.Filter.Eq("_id", new ObjectId(criteriaGroupId));

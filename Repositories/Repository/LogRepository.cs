@@ -58,5 +58,25 @@ namespace WebAPIwithMongoDB.Repositories.Repository
             return await _dbCollection.FindAsync<Log>(filter);
         }
 
+        public async Task DeleteMultipleAsync(List<string> ids)
+        {
+            var objectIds = ids.Select(id => new ObjectId(id)).ToList();
+            var filter = Builders<Log>.Filter.In("_id", objectIds);
+
+            await _dbCollection.DeleteManyAsync(filter);
+
+            // // Thêm một log để ghi lại hành động bulk delete
+            // var log = new Log
+            // {
+            //     UserId = "66ea2c41933b21975a8fb8d1",
+            //     Action = "DeleteMultiple",
+            //     TimeStamp = DateTime.UtcNow,
+            //     Status = "available",
+            //     Description = $"admin đã xóa nhiều log với các id: {string.Join(", ", ids)}"
+            // };
+
+            // await _logs.InsertOneAsync(log);
+        }
+
     }
 }

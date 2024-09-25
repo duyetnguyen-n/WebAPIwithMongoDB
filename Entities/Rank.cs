@@ -16,5 +16,7 @@ namespace WebAPIwithMongoDB.Entities
         public int? PointRangeStart { get; set; }
         [BsonElement("pointRangeEnd"), BsonRepresentation(BsonType.Int32)]
         public int? PointRangeEnd { get; set; }
+        [BsonElement("TimeStamp"), BsonRepresentation(BsonType.DateTime)]
+        public DateTime? TimeStamp { get; set; }
     }
 }

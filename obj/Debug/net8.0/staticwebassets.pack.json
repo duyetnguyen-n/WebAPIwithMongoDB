@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets/uploads/03ff4765-1986-4021-b59f-567c86062e9a.jpg"
     },
     {
+      "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/1c680f45-a099-462d-9e50-5f0ce0ed4cf4.jpg",
+      "PackagePath": "staticwebassets/uploads/1c680f45-a099-462d-9e50-5f0ce0ed4cf4.jpg"
+    },
+    {
       "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/2061ef8a-b743-4c72-bd1d-9681ee9c0b4c_duyet.jpg",
       "PackagePath": "staticwebassets/uploads/2061ef8a-b743-4c72-bd1d-9681ee9c0b4c_duyet.jpg"
     },
@@ -21,16 +25,16 @@
       "PackagePath": "staticwebassets/uploads/85729bf1-d373-4cb0-8776-fae675f1aa7d.jpg"
     },
     {
+      "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/89ca0645-bdff-4ebf-9910-ef110a5171cd.jpg",
+      "PackagePath": "staticwebassets/uploads/89ca0645-bdff-4ebf-9910-ef110a5171cd.jpg"
+    },
+    {
       "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/a99e4ec2-7eeb-445a-8553-b72698938df5.jpg",
       "PackagePath": "staticwebassets/uploads/a99e4ec2-7eeb-445a-8553-b72698938df5.jpg"
     },
     {
       "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/duyet.jpg",
       "PackagePath": "staticwebassets/uploads/duyet.jpg"
-    },
-    {
-      "Id": "/Users/macbook/Documents/Dự án web/vscode-dotnet/WebAPIwithMongoDB/wwwroot/uploads/f99e3145-8638-493b-af26-5879c6628e81.jpg",
-      "PackagePath": "staticwebassets/uploads/f99e3145-8638-493b-af26-5879c6628e81.jpg"
     },
     {
       "Id": "obj/Debug/net8.0/staticwebassets/msbuild.WebAPIwithMongoDB.Microsoft.AspNetCore.StaticWebAssets.props",

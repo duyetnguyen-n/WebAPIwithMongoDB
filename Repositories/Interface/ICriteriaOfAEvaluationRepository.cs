@@ -10,6 +10,7 @@ namespace WebAPIwithMongoDB.Repositories.Interface
     public interface ICriteriaOfAEvaluationRepository : IBaseRepository<CriteriaOfAEvaluation>
     {
         Task<IEnumerable<CriteriaOfAEvaluation>> GetEvaluationesByCriteriaId(string criteriaId);
+        Task<IEnumerable<CriteriaOfAEvaluation>> GetCriteriesByEvaluateId(string criteriaId);
 
     }
 }

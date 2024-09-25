@@ -16,7 +16,7 @@ namespace WebAPIwithMongoDB.Repositories.Repository
         private readonly ICriteriaOfAEvaluationRepository _evaluateOfAEvaluationRepository;
 
 
-        public CriteriaRepository(IMongoDbContext mongoDbContext, ICriteriaOfAEvaluationRepository evaluateOfAEvaluationRepository, ILogRepository auditLogRepository, ICriteriaGroupRepository criteriaGroupRepository) : base(mongoDbContext, auditLogRepository)
+        public CriteriaRepository(IMongoDbContext mongoDbContext, IHttpContextAccessor httpContextAccessor, ICriteriaOfAEvaluationRepository evaluateOfAEvaluationRepository, ILogRepository auditLogRepository, ICriteriaGroupRepository criteriaGroupRepository) : base(mongoDbContext,httpContextAccessor, auditLogRepository)
         {
             _criteriaGroupRepository = criteriaGroupRepository;
             _evaluateOfAEvaluationRepository = evaluateOfAEvaluationRepository;
