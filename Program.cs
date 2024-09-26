@@ -113,16 +113,16 @@ builder.Services.AddScoped<ICriteriaRepository, CriteriaRepository>();
 builder.Services.AddScoped<IEvaluateRepository, EvaluateRepository>();
 builder.Services.AddScoped<IRankRepository, RankRepository>();
 builder.Services.AddScoped<ILogRepository, LogRepository>();
-builder.Services.AddScoped<PointsResetService>();
 builder.Services.AddScoped<IPermissionRequestsRepository, PermissionRequestsRepository>();
-builder.Services.AddHttpContextAccessor(); 
-builder.Services.AddHostedService<PointsResetHostedService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<PointsResetService>(); // Đăng ký PointsResetService là scoped
+builder.Services.AddHostedService<PointsResetHostedService>(); // Đăng ký PointsResetHostedService là singleton
+builder.Services.AddScoped<ICriteriaGroupRoleService, CriteriaGroupRoleService>();
 
 
 var app = builder.Build();
 
 
-// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

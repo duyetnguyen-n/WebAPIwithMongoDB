@@ -17,8 +17,10 @@ namespace WebAPIwithMongoDB.Entities
 
         [BsonElement("quantity"), BsonRepresentation(BsonType.Int32)]
         public int? Quantity { get; set; }
+
         [BsonElement("total"), BsonRepresentation(BsonType.Int32)]
         public int? Total { get; set; }
+        
         [BsonElement("TimeStamp"), BsonRepresentation(BsonType.DateTime)]
         public DateTime? TimeStamp { get; set; }
     }

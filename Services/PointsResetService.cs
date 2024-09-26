@@ -9,6 +9,7 @@ namespace WebAPIwithMongoDB.Services
     public class PointsResetService
     {
         private readonly IUserRepository _userRepository; 
+        
 
         public PointsResetService(IUserRepository userRepository)
         {

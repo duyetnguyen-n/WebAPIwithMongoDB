@@ -12,8 +12,8 @@ namespace WebAPIwithMongoDB.Entities
         [BsonElement("name"), BsonRepresentation(BsonType.String)]
         public string? Name { get; set; }
 
-        [BsonElement("points"), BsonRepresentation(BsonType.Double)]
-        public double Points { get; set; }
+        [BsonElement("points"), BsonRepresentation(BsonType.Int32)]
+        public int Points { get; set; }
 
         [BsonElement("notes"), BsonRepresentation(BsonType.String)]
         public string? Notes { get; set; }

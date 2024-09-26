@@ -37,8 +37,8 @@ namespace WebAPIwithMongoDB.Entities
         [BsonElement("teachGroupId"), BsonRepresentation(BsonType.ObjectId)]
         public string? TeachGroupId { get; set; }
 
-        [BsonElement("point"), BsonRepresentation(BsonType.Double)]
-        public double Point { get; set; }
+        [BsonElement("point"), BsonRepresentation(BsonType.Int32)]
+        public int? Point { get; set; }
 
         [BsonElement("avatar"), BsonRepresentation(BsonType.String)]
         public string? Avatar { get; set; }

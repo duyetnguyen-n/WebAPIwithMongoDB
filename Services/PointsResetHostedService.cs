@@ -2,17 +2,20 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using WebAPIwithMongoDB.Services;
+
 namespace WebAPIwithMongoDB.Controllers
 {
     public class PointsResetHostedService : IHostedService, IDisposable
     {
         private Timer _timer;
-        private readonly PointsResetService _pointsResetService;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public PointsResetHostedService(PointsResetService pointsResetService)
+        // Loại bỏ dependency trực tiếp tới PointsResetService
+        public PointsResetHostedService(IServiceScopeFactory serviceScopeFactory)
         {
-            _pointsResetService = pointsResetService;
+            _serviceScopeFactory = serviceScopeFactory;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -23,7 +26,11 @@ namespace WebAPIwithMongoDB.Controllers
 
         private async void ResetPoints(object state)
         {
-            await _pointsResetService.ResetPoints();
+            using (var scope = _serviceScopeFactory.CreateScope())
+            {
+                var pointsResetService = scope.ServiceProvider.GetRequiredService<PointsResetService>();
+                await pointsResetService.ResetPoints(); // Sử dụng scoped PointsResetService trong scope mới
+            }
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -37,5 +44,4 @@ namespace WebAPIwithMongoDB.Controllers
             _timer?.Dispose();
         }
     }
-
 }

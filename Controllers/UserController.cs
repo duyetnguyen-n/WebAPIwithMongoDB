@@ -135,10 +135,8 @@ namespace WebAPIwithMongoDB.Controllers
             userOld.TeachGroupId = user.TeachGroupId; 
             userOld.Point = user.Point;
 
-            // Kiểm tra nếu có ảnh đại diện mới
             if (avatar != null)
             {
-                // Xóa ảnh cũ nếu tồn tại
                 if (!string.IsNullOrEmpty(userOld.Avatar))
                 {
                     var oldAvatarPath = Path.Combine(_env.WebRootPath, "uploads", userOld.Avatar);
@@ -156,20 +154,23 @@ namespace WebAPIwithMongoDB.Controllers
                     }
                 }
 
-                // Upload file avatar mới
                 var uploadResponse = await UploadFile(avatar);
                 if (uploadResponse.Result is BadRequestObjectResult)
                 {
                     return BadRequest(new ApiResponse<User>(400, "File không hợp lệ", null));
                 }
                 var uploadResult = (ApiResponse<string>)((ObjectResult)uploadResponse.Result).Value;
-                userOld.Avatar = uploadResult.Data; // Cập nhật ảnh đại diện mới
+                userOld.Avatar = uploadResult.Data; 
             }
 
             await _users.UpdateAsync(user.Id, userOld);
 
             if (!ModelState.IsValid)
-                return BadRequest(new ApiResponse<User>(400, "Lỗi chưa thêm được dữ liệu đâu", null));
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage)).ToList();
+                return BadRequest(new ApiResponse<List<string>>(400, "Validation Failed", errors));
+            }
+
 
             return Ok(new ApiResponse<User>(200, "Cập nhật thành công", userOld));
         }

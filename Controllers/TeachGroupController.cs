@@ -78,10 +78,9 @@ namespace WebAPIwithMongoDB.Controllers
             var TeachGroupold = await _TeachGroup.GetAsync(TeachGroup.Id);
 
             TeachGroupold.Name = TeachGroup.Name;
-            TeachGroupold.Count = TeachGroup.Count;
             TeachGroupold.TimeStamp = DateTime.Now;
 
-            await _TeachGroup.UpdateAsync(TeachGroup.Id, TeachGroup);
+            await _TeachGroup.UpdateAsync(TeachGroup.Id, TeachGroupold);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
