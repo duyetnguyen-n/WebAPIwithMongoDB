@@ -10,7 +10,7 @@ namespace WebAPIwithMongoDB.Entities
         public string? Id { get; set; }
 
         [BsonElement("name"), BsonRepresentation(BsonType.String)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [BsonElement("userId")]
         public string? UserId { get; set; }
@@ -25,24 +25,24 @@ namespace WebAPIwithMongoDB.Entities
         public int? TotalPointAddition { get; set; }
 
         [BsonElement("stt"), BsonRepresentation(BsonType.Int32)]
-        public int Stt { get; set; }
+        public int? Stt { get; set; }
 
         [BsonElement("from"), BsonRepresentation(BsonType.DateTime)]
-        public DateTime From { get; set; }
+        public DateTime? From { get; set; }
 
         [BsonElement("to"), BsonRepresentation(BsonType.DateTime)]
-        public DateTime To { get; set; }
+        public DateTime? To { get; set; }
 
         [BsonElement("totalPoint"), BsonRepresentation(BsonType.Int32)]
         public int? TotalPoint { get; set; }
 
         [BsonElement("UploadDay"), BsonRepresentation(BsonType.DateTime)]
-        public DateTime UploadDay { get; set; }
+        public DateTime? UploadDay { get; set; }
 
         [BsonElement("confirmDay"), BsonRepresentation(BsonType.DateTime)]
         public DateTime? ConfirmDay { get; set; }
 
         [BsonElement("TimeStamp"), BsonRepresentation(BsonType.DateTime)]
-        public DateTime TimeStamp { get; set; }
+        public DateTime? TimeStamp { get; set; }
     }
 }

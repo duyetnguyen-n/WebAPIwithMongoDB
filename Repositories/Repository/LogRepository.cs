@@ -45,6 +45,10 @@ namespace WebAPIwithMongoDB.Repositories.Repository
             IAsyncCursor<Log> query = await Query(Builders<Log>.Filter.Empty);
             return await query.ToListAsync();
         }
+        public async Task<IEnumerable<Log>> GetLogByUserId(string userId){
+            var filter = Builders<Log>.Filter.Eq(e => e.UserId, userId);
+            return await _dbCollection.Find(filter).ToListAsync();
+        }
 
         public async Task<Log> GetAsync(string id)
         {

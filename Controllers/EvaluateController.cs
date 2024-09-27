@@ -83,6 +83,9 @@ namespace WebAPIwithMongoDB.Controllers
             {
                 return BadRequest(new ApiResponse<Evaluate>(400, "Thất bại", null));
             }
+            var isAdmin = User.IsInRole("Admin");
+
+            DateTime? confirmDay = isAdmin ? DateTime.Now : (DateTime?)null; 
             var createdEvaluate = new Evaluate
             {
                 Name = Evaluate.Name,
@@ -94,7 +97,8 @@ namespace WebAPIwithMongoDB.Controllers
                 To = Evaluate.To,
                 TotalPoint = 0,
                 TimeStamp = DateTime.Now,
-                UploadDay = DateTime.Now
+                UploadDay = DateTime.Now,
+                ConfirmDay = confirmDay
             };
 
             await _Evaluate.CreateAsync(createdEvaluate);
@@ -108,29 +112,60 @@ namespace WebAPIwithMongoDB.Controllers
         [ProducesResponseType(404)]
         public async Task<ActionResult<ApiResponse<Evaluate>>> PutEvaluate(Evaluate Evaluate)
         {
-            if (!await _Evaluate.Exists(Evaluate.Id))
-                return NotFound(new ApiResponse<Evaluate>(404, "Không tìm thấy tiêu chí", null));
-
-            var Evaluateold = await _Evaluate.GetAsync(Evaluate.Id);
-            if (Evaluateold == null)
+            var existingEvaluate = await _Evaluate.GetAsync(Evaluate.Id);
+            if (existingEvaluate == null)
                 return NotFound(new ApiResponse<Evaluate>(404, "Không tìm thấy đánh giá", null));
 
-            Evaluateold.Name = Evaluate.Name;
-            Evaluateold.UserId = Evaluate.UserId;
-            Evaluateold.TotalPointSubstraction = Evaluate.TotalPointSubstraction;
-            Evaluateold.TotalPointAddition = Evaluate.TotalPointAddition;
-            Evaluateold.From = Evaluate.From;
-            Evaluateold.To = Evaluate.To;
-            Evaluateold.TimeStamp = DateTime.Now;
-            Evaluateold.ConfirmDay = Evaluate.ConfirmDay;
+            if (existingEvaluate.Name != Evaluate.Name)
+                existingEvaluate.Name = Evaluate.Name;
 
-            await _Evaluate.UpdateAsync(Evaluate.Id, Evaluateold);
+            if (existingEvaluate.UserId != Evaluate.UserId)
+                existingEvaluate.UserId = Evaluate.UserId;
+
+            if (existingEvaluate.TotalPointSubstraction != Evaluate.TotalPointSubstraction)
+                existingEvaluate.TotalPointSubstraction = Evaluate.TotalPointSubstraction;
+
+            if (existingEvaluate.TotalPointAddition != Evaluate.TotalPointAddition)
+                existingEvaluate.TotalPointAddition = Evaluate.TotalPointAddition;
+
+            if (existingEvaluate.From != Evaluate.From)
+                existingEvaluate.From = Evaluate.From;
+
+            if (existingEvaluate.To != Evaluate.To)
+                existingEvaluate.To = Evaluate.To;
+
+            if (existingEvaluate.ConfirmDay != Evaluate.ConfirmDay)
+                existingEvaluate.ConfirmDay = Evaluate.ConfirmDay;
+
+            existingEvaluate.TimeStamp = DateTime.Now;
+
+            await _Evaluate.UpdateAsync(Evaluate.Id, existingEvaluate);
 
             if (!ModelState.IsValid)
-                return BadRequest(new ApiResponse<Evaluate>(400, "Không thành công", Evaluateold));
+                return BadRequest(new ApiResponse<Evaluate>(400, "Không thành công", existingEvaluate));
 
-            return Ok(new ApiResponse<Evaluate>(200, "Thành công", Evaluateold));
+            return Ok(new ApiResponse<Evaluate>(200, "Thành công", existingEvaluate));
         }
+
+
+        [HttpPut("PutEvaluateStt/{Id}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<ApiResponse<Evaluate>>> PutEvaluateSTT(string Id, [FromBody] int stt)
+        {
+            var evaluate = await _Evaluate.GetAsync(Id);
+            if (evaluate == null)
+                return NotFound(new ApiResponse<Evaluate>(404, "Không tìm thấy tiêu chí", null));
+
+            await _Evaluate.UpdateEvaluateSTT(Id, stt);
+
+            if (!ModelState.IsValid)
+                return BadRequest(new ApiResponse<Evaluate>(400, "Không thành công", null));
+
+            return Ok(new ApiResponse<Evaluate>(200, "Thành công", evaluate));
+        }
+
 
         [HttpDelete("{id}")]
         [ProducesResponseType(400)]
@@ -148,7 +183,7 @@ namespace WebAPIwithMongoDB.Controllers
             var user = await _user.GetAsync(evaluate.UserId);
             if(user ==null)
                 return NotFound(new ApiResponse<string>(404, "Không tìm thấy người dùng", null));
-            user.Point -= Convert.ToInt32(evaluate.TotalPoint);
+            user.Point -= evaluate.TotalPoint;
             await _Evaluate.DeleteAsync(id);
             await _user.UpdateAsync(user.Id, user);
 

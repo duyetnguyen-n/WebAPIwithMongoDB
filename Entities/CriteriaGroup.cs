@@ -11,14 +11,14 @@ namespace WebAPIwithMongoDB.Entities
         public string? Id { get; set; }
 
         [BsonElement("name"), BsonRepresentation(BsonType.String)]
-        [Required(ErrorMessage = "Tên không được để trống")]
+        // [Required(ErrorMessage = "Tên không được để trống")]
         public string? Name { get; set; }
 
         [BsonElement("count"), BsonRepresentation(BsonType.Int32)]
          public int Count { get; set; }
 
         [BsonElement("role"), BsonRepresentation(BsonType.String)]
-        [Required(ErrorMessage = "Loại tiêu chí không được để trống")]
+        // [Required(ErrorMessage = "Loại tiêu chí không được để trống")]
         public string? Role { get; set; }
         [BsonElement("TimeStamp"), BsonRepresentation(BsonType.DateTime)]
         public DateTime? TimeStamp { get; set; }

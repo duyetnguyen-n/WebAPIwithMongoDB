@@ -11,5 +11,7 @@ namespace WebAPIwithMongoDB.Repositories.Interface
     {
         Task<IEnumerable<Evaluate>> GetEvaluationsByUserId(string userId);
         Task<IEnumerable<Evaluate>> GetEvaluationsByRankId(string rankId);
+
+        Task UpdateEvaluateSTT(string id, int stt);
     }
 }

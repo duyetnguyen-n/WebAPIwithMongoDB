@@ -45,6 +45,21 @@ namespace WebAPIwithMongoDB.Controllers
             return Ok(new ApiResponse<Log>(200, "Thành công", Log));
         }
 
+        [HttpGet("user/{useriId}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Log>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        public async Task<ActionResult<ApiResponse<IEnumerable<Log>>>> GetLogsByUserId(string userId)
+        {
+            
+            var Log = await _Log.GetLogByUserId(userId);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(new ApiResponse<IEnumerable<Log>>(200, "Thành công", Log));
+        }
+
         [HttpPost]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]

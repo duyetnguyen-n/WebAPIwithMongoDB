@@ -9,6 +9,7 @@ namespace WebAPIwithMongoDB.Repositories.Interface
 {
     public interface IPermissionRequestsRepository : IBaseRepository<PermissionRequests>
     {
-        
+        // Task<User> getUserByPermissionRequestsId(string permissionRequestsId);
+        // Task<Evaluate> getEvaluateByPermissionRequestsId(string permissionRequestsId);
     }
 }

@@ -89,6 +89,7 @@ namespace WebAPIwithMongoDB.Controllers
                 {
                     return NotFound(new ApiResponse<CriteriaOfAEvaluation>(404, "Không tìm thấy Criteria", null));
                 }
+                var user = await _userRepoistory.GetAsync(evaluateOld.UserId);
 
                 var criteriaGroupOld = await _criteriaGroupRepository.GetAsync(criteriaOld.CriteriaGroupId);
                 if (criteriaGroupOld == null)
@@ -96,37 +97,39 @@ namespace WebAPIwithMongoDB.Controllers
                     return NotFound(new ApiResponse<CriteriaOfAEvaluation>(404, "Không tìm thấy Criteria Group", null));
                 }
 
-                // Tính tổng điểm của Criteria dựa trên số lượng và điểm của Criteria
                 var totalPoint = Convert.ToInt32(criteriaOfAEvaluation.Quantity * criteriaOld.Points);
 
-                // Cập nhật điểm cộng/trừ dựa trên vai trò của CriteriaGroup
                 if (criteriaGroupOld.Role.ToLower() == "trừ điểm")
                 {
                     evaluateOld.TotalPointSubstraction += totalPoint;
+                    if (evaluateOld.ConfirmDay != null)
+                    {
+                        user.Point -= Convert.ToInt32(totalPoint) ;       
+                    }
                 }
                 else
                 {
                     evaluateOld.TotalPointAddition += totalPoint;
+                    if (evaluateOld.ConfirmDay != null)
+                    {
+                        user.Point += Convert.ToInt32(totalPoint);
+                    }
                 }
 
-                // Tính toán tổng điểm hiện tại của Evaluate
                 evaluateOld.TotalPoint = evaluateOld.TotalPointAddition - evaluateOld.TotalPointSubstraction;
 
-                // Cập nhật xếp hạng (Rank) dựa trên tổng điểm
                 var ranks = await _rankRepository.GetAsync();
                 var rankId = ranks.FirstOrDefault(rank =>
                     Convert.ToInt32(evaluateOld.TotalPoint) >= Convert.ToInt32(rank.PointRangeStart) &&
                     Convert.ToInt32(evaluateOld.TotalPoint) <= Convert.ToInt32(rank.PointRangeEnd))?.Id;
 
                 evaluateOld.RankId = rankId;
+                await _userRepoistory.UpdateAsync(evaluateOld.UserId, user);
+
+
 
                 await _evaluationRepository.UpdateAsync(criteriaOfAEvaluation.EvaluateId, evaluateOld);
 
-                var user = await _userRepoistory.GetAsync(evaluateOld.UserId);
-                user.Point += totalPoint;
-                await _userRepoistory.UpdateAsync(evaluateOld.UserId, user);
-
-                // Tạo CriteriaOfAEvaluation mới
                 var newCriteria = new CriteriaOfAEvaluation
                 {
                     EvaluateId = criteriaOfAEvaluation.EvaluateId,

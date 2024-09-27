@@ -46,7 +46,6 @@ namespace WebAPIwithMongoDB.Controllers
 
             return Ok(new ApiResponse<Criteria>(200, "Thành công", Criteria));
         }
-
         [HttpPost]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
@@ -70,7 +69,6 @@ namespace WebAPIwithMongoDB.Controllers
 
             return Ok(new ApiResponse<Criteria>(200, "Thành công", Criteria));
         }
-
         [HttpPut]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]

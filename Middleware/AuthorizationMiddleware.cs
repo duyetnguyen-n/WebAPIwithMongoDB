@@ -36,7 +36,6 @@ namespace WebAPIwithMongoDB.Middleware
             else if (role == "thay-co" || role == "user" || role == "User")
             {
                 // Thầy cô chỉ có quyền truy cập các chức năng hạn chế
-                // Bạn có thể kiểm tra thêm permissions hoặc điều kiện khác tại đây
                 await _next(context);
             }
             else

@@ -17,23 +17,25 @@ namespace WebAPIwithMongoDB.Controllers
     public class PermissionRequestsController : Controller
     {
         private readonly IPermissionRequestsRepository _PermissionRequests;
+        private readonly IEvaluateRepository _evaluateRepository;
 
-        public PermissionRequestsController(IPermissionRequestsRepository PermissionRequests)
+        public PermissionRequestsController(IPermissionRequestsRepository PermissionRequests, IEvaluateRepository evaluateRepository)
         {
             _PermissionRequests = PermissionRequests;
+            _evaluateRepository = evaluateRepository;
         }
-        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<ActionResult<ApiResponse<IEnumerable<PermissionRequests>>>> GetPermissionRequestss()
         {
             var PermissionRequests = await _PermissionRequests.GetAsync();
             return Ok(new ApiResponse<IEnumerable<PermissionRequests>>(200, "Thành công", PermissionRequests));
         }
-        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(PermissionRequests))]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
+
+
         public async Task<ActionResult<ApiResponse<PermissionRequests>>> GetPermissionRequests(string id)
         {
             if (!await _PermissionRequests.Exists(id))
@@ -45,7 +47,6 @@ namespace WebAPIwithMongoDB.Controllers
 
             return Ok(new ApiResponse<PermissionRequests>(200, "Thành công", PermissionRequests));
         }
-        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ProducesResponseType(400)]
         [ProducesResponseType(200)]
@@ -69,8 +70,39 @@ namespace WebAPIwithMongoDB.Controllers
 
             return Ok(new ApiResponse<PermissionRequests>(200, "Thành công", PermissionRequests));
         }
+
+        [HttpPut]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(200)]
         [Authorize(Roles = "Admin")]
-        [HttpDelete]
+        public async Task<ActionResult<ApiResponse<PermissionRequests>>> PutPermissionRequests(PermissionRequests PermissionRequests)
+        {
+            if (!await _PermissionRequests.Exists(PermissionRequests.Id))
+                return NotFound(new ApiResponse<PermissionRequests>(404, "Không tìm thấy tiêu chí", null));
+            var PermissionRequestsold = await _PermissionRequests.GetAsync(PermissionRequests.Id);
+            var valuate = await _evaluateRepository.GetAsync(PermissionRequestsold.RequetedPermissionId);
+            if(valuate ==null)
+                return NotFound(new ApiResponse<PermissionRequests>(404, "Không tìm thấy đánh giá", null));
+
+            if(PermissionRequestsold.ReviewerId != PermissionRequests.ReviewerId)
+                PermissionRequestsold.ReviewerId = PermissionRequests.ReviewerId;
+            if(PermissionRequestsold.Status != PermissionRequests.Status)
+                PermissionRequestsold.Status = PermissionRequests.Status;
+            PermissionRequestsold.TimeStamp = DateTime.Now;
+            valuate.ConfirmDay = DateTime.Now;
+
+            await _PermissionRequests.UpdateAsync(PermissionRequests.Id, PermissionRequests);
+            await _evaluateRepository.UpdateAsync(valuate.Id, valuate);
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(new ApiResponse<PermissionRequests>(200, "Thành công", PermissionRequests));
+        }
+
+
+        [HttpDelete("{id}")]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
