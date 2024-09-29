@@ -28,7 +28,7 @@ namespace WebAPIwithMongoDB.Controllers
         public async Task<ActionResult<ApiResponse<IEnumerable<Criteria>>>> GetCriterias()
         {
             var criteria = await _Criteria.GetAsync();
-            return Ok(new ApiResponse<IEnumerable<Criteria>>(200, "Thành công", criteria));
+            return new ApiResponse<IEnumerable<Criteria>>(200, "Thành công", criteria);
         }
 
         [HttpGet("{id}")]
@@ -38,11 +38,11 @@ namespace WebAPIwithMongoDB.Controllers
         public async Task<ActionResult<ApiResponse<Criteria>>> GetCriteria(string id)
         {
             if (!await _Criteria.Exists(id))
-                return NotFound(new ApiResponse<Criteria>(404, "Không tìm thấy tiêu chí", null));
+                return new ApiResponse<Criteria>(404, "Không tìm thấy tiêu chí", null);
             var Criteria = await _Criteria.GetAsync(id);
 
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return new ApiResponse<Criteria>(404, $"{ModelState}", null);
 
             return Ok(new ApiResponse<Criteria>(200, "Thành công", Criteria));
         }
@@ -55,7 +55,7 @@ namespace WebAPIwithMongoDB.Controllers
         {
             if (Criteria == null || !ModelState.IsValid)
             {
-                return BadRequest(new ApiResponse<Criteria>(400, "Thất bại", null));
+                return new ApiResponse<Criteria>(400, "Thất bại", null);
             }
             await _Criteria.CreateAsync(new Criteria
             {
@@ -67,7 +67,7 @@ namespace WebAPIwithMongoDB.Controllers
                 TimeStamp = DateTime.Now
             });
 
-            return Ok(new ApiResponse<Criteria>(200, "Thành công", Criteria));
+            return new ApiResponse<Criteria>(200, "Thành công", Criteria);
         }
         [HttpPut]
         [ProducesResponseType(400)]
@@ -77,7 +77,7 @@ namespace WebAPIwithMongoDB.Controllers
         public async Task<ActionResult<ApiResponse<Criteria>>> PutCriteria(Criteria Criteria)
         {
             if (!await _Criteria.Exists(Criteria.Id))
-                return NotFound(new ApiResponse<Criteria>(404, "Không tìm thấy tiêu chí", null));
+                return new ApiResponse<Criteria>(404, "Không tìm thấy tiêu chí", null);
             var Criteriaold = await _Criteria.GetAsync(Criteria.Id);
 
             if (Criteriaold.CriteriaGroupId != Criteria.CriteriaGroupId)
@@ -96,9 +96,9 @@ namespace WebAPIwithMongoDB.Controllers
             await _Criteria.UpdateAsync(Criteria.Id, Criteria);
 
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return new ApiResponse<Criteria>(404, $"{ModelState}", null); ;
 
-            return Ok(new ApiResponse<Criteria>(200, "Thành công", Criteria));
+            return new ApiResponse<Criteria>(200, "Thành công", Criteria);
         }
         [HttpDelete("{id}")]
         [ProducesResponseType(400)]
@@ -108,13 +108,14 @@ namespace WebAPIwithMongoDB.Controllers
         public async Task<ActionResult<ApiResponse<string>>> DeleteCriteria(string id)
         {
             if (!await _Criteria.Exists(id))
-                return NotFound(new ApiResponse<string>(404, "Không tìm thấy tiêu chí", null));
+                return new ApiResponse<string>(404, "Không tìm thấy tiêu chí", null);
 
             await _Criteria.DeleteAsync(id);
 
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-            return Ok(new ApiResponse<string>(200, "Xóa thành công", null));
+                return new ApiResponse<string>(404, $"{ModelState}", null); 
+
+            return new ApiResponse<string>(200, "Xóa thành công", null);
         }
     }
 }
