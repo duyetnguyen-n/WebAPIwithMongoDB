@@ -119,6 +119,7 @@ builder.Services.AddScoped<PointsResetService>(); // Đăng ký PointsResetServi
 builder.Services.AddHostedService<PointsResetHostedService>(); // Đăng ký PointsResetHostedService là singleton
 builder.Services.AddScoped<ICriteriaGroupRoleService, CriteriaGroupRoleService>();
 
+builder.Services.AddScoped<CriteriaService>();
 
 var app = builder.Build();
 
